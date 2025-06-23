@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="IphoneCollector.MVVM.View.FolderPickerPopup"
+             Size="300,300" >
+   
+        <!--<Picker WidthRequest="150" Margin="0,0,20,0" ItemsSource="{Binding DeviceFolders}"/>-->
+
+        <VerticalStackLayout Padding="20" BackgroundColor="Red">
+            <!-- Simulated Popup -->
+            <Border IsVisible="True" BackgroundColor="#EEE" Padding="5">
+                <VerticalStackLayout>
+                <CollectionView ItemsSource="{Binding DeviceFolders}" Margin="20,0,0,0">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="7*,3*" >
+                                    <Label Text="{Binding Name}" VerticalOptions="Center"/>
+                                    <CheckBox Grid.Column="1" IsChecked="{Binding IsSelected}" Margin="5,0,0,0" />
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <!--<Button Text="Done" Command="{Binding ClosePickerCommand}" />-->
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+
+</toolkit:Popup>

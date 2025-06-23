@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:helper ="clr-namespace:IphoneCollector.Helper"
+             x:Class="IphoneCollector.MainPage"  Background="#D3D3D3">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="7*"/>
+        </Grid.RowDefinitions>
+
+        <Border BackgroundColor="{StaticResource PrimaryColor}" MinimumHeightRequest="130" StrokeThickness="0">
+            <Grid>
+                <Label Text="📱 iPhone Collector" Style="{StaticResource FieldLabel}" HorizontalOptions="CenterAndExpand"  FontSize="Large"  FontAttributes="Bold" VerticalOptions="Center" FontFamily="Roboto" TextColor="{StaticResource White}"/>
+                <StackLayout HorizontalOptions="EndAndExpand">
+                    <StackLayout.Style>
+                        <Style TargetType="StackLayout">
+                            <Setter Property="IsVisible" Value="True" />
+                            <Style.Triggers>
+                                <DataTrigger TargetType="StackLayout"
+                                    Binding="{Binding IsStartCollectionView}"
+                                    Value="True">
+                                    <Setter Property="IsVisible" Value="False" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackLayout.Style>
+
+                    <!-- Settings icon with tap gesture -->
+                    <Label Text="⚙️"
+                       FontSize="25"
+                       Margin="20"
+                       HorizontalOptions="EndAndExpand">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnSettingsTapped" />
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                    <!-- Hidden Picker that appears on tap -->
+                    <Picker x:Name="SettingsPicker" FontAttributes="Bold"  WidthRequest="210" Background="White" SelectedItem="{Binding SelectedSettingOption}"
+                        IsVisible="False"
+                        SelectedIndex="0"
+                        ItemsSource="{Binding SettingsOptions}" Margin="0,0,25,0"/>
+                </StackLayout>
+
+
+            </Grid>
+        </Border>
+
+        <ContentView Grid.Row="1" Content="{Binding CurrentView}"/>
+    </Grid>
+
+
+</ContentPage>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:helper="clr-namespace:IphoneCollector.Helper"
+             x:Class="IphoneCollector.MVVM.View.CloudUploadView">
+    <VerticalStackLayout>
+        <Grid Padding="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Border StrokeThickness="0"  Background="#000000"  HorizontalOptions="Center" Margin="0,10,0,0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+                <FlexLayout 
+            Wrap="Wrap"
+            Direction="Row"
+            Padding="5"
+            HorizontalOptions="Center" 
+            JustifyContent="Start"
+            VerticalOptions="CenterAndExpand"
+            AlignItems="Start">
+                    <Label Text="1. New Collection"   Style="{StaticResource MenuBarLabel}"/>
+                    <Label Text="2. Device Credentials"  Style="{StaticResource MenuBarLabel}"/>
+                    <Label Text="3. Storage Options"  Style="{StaticResource MenuBarLabel}"/>
+                    <Label Text="4. Start Collection"  Style="{StaticResource MenuBarLabel}"/>
+                    <Label Text="5. Cloud Upload"  Style="{StaticResource MenuBarLabel}"/>
+                </FlexLayout>
+            </Border>
+            <Border 
+          Grid.Row="1"
+          Background="{StaticResource White}"
+          StrokeThickness="0"
+          Margin="0,10,0,0"
+          HorizontalOptions="Center"
+          VerticalOptions="Start"
+          Padding="16"
+          MinimumHeightRequest="300">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="#0D000000" Offset="0,2" Radius="8" Opacity="1"/>
+                </Border.Shadow>
+
+                <FlexLayout 
+                  Direction="Row"
+                  Padding="5"
+                  HorizontalOptions="Center" 
+                  JustifyContent="Start"
+                  VerticalOptions="Start"
+                  AlignItems="Start"
+                  >
+                    <VerticalStackLayout Margin="0,10,10,0">
+                        <Label Text="Cloud Destination Summary" MaximumWidthRequest="270" FontFamily="Roboto" FontAttributes="Bold" FontSize="21" />
+                        <Label Text="Selected cloud storage configuration and credentials will appear here." LineBreakMode="WordWrap" MaximumWidthRequest="295"  Margin="0,20,0,0" FontSize="Micro"/>
+                        <Button Text="Prev" WidthRequest="120" HorizontalOptions="Start" VerticalOptions="End" Margin="0,65,0,0" Command="{Binding StartUploadPrevCommand}"/>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout  Margin="0,10,0,0">
+                        <Label Text="Drag and Drop Files Here" FontAttributes="Bold" FontFamily="Roboto" FontSize="Medium" HorizontalTextAlignment="Start"/>
+
+                        <Grid Margin="0,10,0,0" MinimumWidthRequest="480">
+                            <GraphicsView HeightRequest="120" >
+                                <GraphicsView.Drawable>
+                                    <helper:DashedBorderDrawable />
+                                </GraphicsView.Drawable>
+                            </GraphicsView>
+                            <Button Text="Drop files to upload to selected cloud destination"
+                              LineBreakMode="WordWrap"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           MaximumWidthRequest="500"
+                           TextColor="#666"
+                           Background="Transparent" Command="{Binding SelectFileCommand}"/>
+                        </Grid>
+                      
+                        
+                        <Button Text="Start Upload" HorizontalOptions="End" Margin="0,20,0,0" Command="{Binding StartUploadCommand}"/>
+                            
+                      
+                    </VerticalStackLayout>
+                </FlexLayout>
+
+            </Border>
+
+
+        </Grid>
+    </VerticalStackLayout>
+</ContentView>

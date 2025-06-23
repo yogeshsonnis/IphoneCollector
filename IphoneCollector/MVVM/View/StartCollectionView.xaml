@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+              xmlns:helper="clr-namespace:IphoneCollector.Helper"
+             x:Class="IphoneCollector.MVVM.View.StartCollectionView">
+    <VerticalStackLayout>
+        <Grid Padding="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Border StrokeThickness="0"  Background="#000000"  HorizontalOptions="Center" Margin="0,10,0,0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+                <FlexLayout  
+                   Direction="Row"
+                   Padding="5"
+                   HorizontalOptions="Center" 
+                   JustifyContent="Start"
+                   VerticalOptions="CenterAndExpand"
+                   AlignItems="Start">
+                    <Label Text="1. New Collection"   Style="{StaticResource MenuBarLabel}"/>
+                    <Label Text="2. Device Credentials"  Style="{StaticResource MenuBarLabel}"/>
+                    <Label Text="3. Storage Options"  Style="{StaticResource MenuBarLabel}"/>
+                    <Label Text="4. Start Collection"  Style="{StaticResource MenuBarLabel}"/>
+                    <Label Text="5. History &amp; Settings"  Style="{StaticResource MenuBarLabel}"/>
+                </FlexLayout>
+            </Border>
+            <Border 
+                 Grid.Row="1"
+                 Background="{StaticResource White}"
+                 StrokeThickness="0"
+                 Margin="0,10,0,0"
+                 HorizontalOptions="Center"
+                 VerticalOptions="Start"
+                 Padding="16"
+                 MinimumHeightRequest="300">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="#0D000000" Offset="0,2" Radius="8" Opacity="1"/>
+                </Border.Shadow>
+
+                <FlexLayout 
+                     Direction="Row"
+                     Padding="5"
+                     HorizontalOptions="Center" 
+                     JustifyContent="Start"
+                     VerticalOptions="Start"
+                     AlignItems="Start">
+                    <VerticalStackLayout  Margin="0,10,0,0" WidthRequest="800">
+                        <Label Text="🟢 Start Collection" FontAttributes="Bold"  TextColor="#202124" FontFamily="Roboto" FontSize="Medium" HorizontalTextAlignment="Start"/>
+                        <Grid Margin="0,10,0,0" MinimumWidthRequest="480">
+                            <GraphicsView MinimumHeightRequest="120" >
+                                <GraphicsView.Drawable>
+                                    <helper:DashedBorderDrawable />
+                                </GraphicsView.Drawable>
+                            </GraphicsView>
+
+                            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" >
+                                <VerticalStackLayout.Style>
+                                    <Style TargetType="VerticalStackLayout">
+                                        <Setter Property="IsVisible" Value="Visible" />
+                                        <Style.Triggers>
+                                            <DataTrigger TargetType="VerticalStackLayout" Binding="{Binding IsDeviceConnected}" Value="True">
+                                                <Setter Property="IsVisible" Value="Collapse" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </VerticalStackLayout.Style>
+                                <Label Text="{Binding DeviceInfo}" LineBreakMode="WordWrap"
+                                       FontAttributes="Bold" TextColor="#202124" HorizontalOptions="Center"/>
+                                <Label Text="{Binding DeviceWarningMsg}" 
+                                    TextColor="#666"/>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Padding="10" MaximumWidthRequest="800">
+                                <VerticalStackLayout.Style>
+                                    <Style TargetType="VerticalStackLayout">
+                                        <Setter Property="IsVisible" Value="Collapse" />
+                                        <Style.Triggers>
+                                            <DataTrigger TargetType="VerticalStackLayout" Binding="{Binding IsDeviceConnected}" Value="True">
+                                                <Setter Property="IsVisible" Value="Visible" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </VerticalStackLayout.Style>
+                                <CollectionView ItemsSource="{Binding ConnectedDevicesList}">
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <HorizontalStackLayout Margin="5">
+                                                <RadioButton GroupName="DeviceGroup" Margin="0,-8,0,0"/>
+                                                <Label Text="{Binding DeviceName}" Margin="0,0,10,0" />
+                                                <Label Text="ProductType : " FontAttributes="Bold" Margin="0,0,10,0"/>
+                                                <Label Text="{Binding ProductType}" Margin="0,0,10,0"/>
+                                                <Label Text="SerialNumber : " FontAttributes="Bold" Margin="0,0,10,0"/>
+                                                <Label Text="{Binding SerialNumber}" Margin="0,0,10,0"/>
+                                            </HorizontalStackLayout>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+
+
+                                <!--<Label Text="{Binding ConnectedDevice.DeviceName}" Margin="0,0,10,0" FontAttributes="Bold"/>
+                                <HorizontalStackLayout>
+                                    <RadioButton Margin="-5,-8,0,0"  GroupName="DeviceGroup"/>
+                                    <Label Text="{Binding ConnectedDevice.ComponyName}" Margin="0,0,10,0"/>
+                                    <Label Text="{Binding ConnectedDevice.DeviceName}" Margin="0,0,10,0"/>
+                                    <Label Text="{Binding ConnectedDevice.ProductType}" Margin="0,0,10,0"/>
+                                </HorizontalStackLayout>-->
+
+
+                            </VerticalStackLayout>
+
+                        </Grid>
+
+
+
+                        <Grid>
+                            <Button Text="Prev" WidthRequest="100" HorizontalOptions="Start" Margin="0,20,0,0" Command="{Binding StartCollectionPrevBtnCommand}"/>
+                            <Button Text="Next" WidthRequest="100" HorizontalOptions="End" Margin="0,20,0,0" Command="{Binding StartCollectionNextBtnCommand}"/>
+
+                        </Grid>
+                        <HorizontalStackLayout HorizontalOptions="End">
+                            <Button Text="Backup Device" IsEnabled="{Binding IsDeviceConnected}"  Margin="0,20,0,0" Command="{Binding BackupDataCommand}"/>
+                        </HorizontalStackLayout>
+                        <Button Text="🔄 Rescan for Device" WidthRequest="170" HorizontalOptions="Center" Margin="0,20,0,0" Command="{Binding RescanDeviceCommand}"/>
+                    </VerticalStackLayout>
+                </FlexLayout>
+
+            </Border>
+
+
+        </Grid>
+    </VerticalStackLayout>
+</ContentView>

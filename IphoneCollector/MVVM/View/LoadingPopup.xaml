@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="IphoneCollector.MVVM.View.LoadingPopup"
+             CanBeDismissedByTappingOutsideOfPopup="False">
+    <Grid HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+        <Border BackgroundColor="White"
+               Padding="20"  StrokeThickness="0">
+            <StackLayout Spacing="10" HorizontalOptions="Center">
+                <ActivityIndicator IsRunning="True" Color="DarkGreen"  WidthRequest="150" HeightRequest="150"/>
+                <VerticalStackLayout  Spacing="10">
+                    <Label Text="{Binding ProgressValue, StringFormat='{0:P0}'}" FontSize="16" HorizontalOptions="Center"/>
+                    <Label Text="{Binding EstimatedTimeDisplay}" FontSize="16" HorizontalOptions="Center"/>
+                <!--<Label Text="Backing up..."  FontSize="Header" TextColor="Gray" Margin="150,-10,0,0" HorizontalTextAlignment="Center"/>-->
+                </VerticalStackLayout>
+            </StackLayout>
+        </Border>
+    </Grid>
+</toolkit:Popup>
