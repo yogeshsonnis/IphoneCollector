@@ -306,14 +306,14 @@ namespace IphoneCollector.MVVM.ViewModel
         }
 
 
-        private string _incriptionPassword;
+        private string _encryptionPassword;
 
-        public string IncriptionPassword
+        public string EncryptionPassword
         {
-            get { return _incriptionPassword; }
+            get { return _encryptionPassword; }
             set
             {
-                _incriptionPassword = value;
+                _encryptionPassword = value;
                 OnPropertyChanged();
             }
         }
@@ -426,7 +426,7 @@ namespace IphoneCollector.MVVM.ViewModel
                     //Debug.WriteLine($"Estimated Time Remaining: {_iosService.EstimatedTimeDisplay}");
                 });
 
-                bool backupSuccess = await _iosService.TriggerBackupAsync(ConnectedDevice.DeviceName, progress, IncriptionPassword, StorageLocation);
+                bool backupSuccess = await _iosService.TriggerBackupAsync(ConnectedDevice.DeviceName, progress, EncryptionPassword, StorageLocation);
 
                 if (!backupSuccess)
                 {
@@ -538,8 +538,9 @@ namespace IphoneCollector.MVVM.ViewModel
 
         private void ExecuteRescanDeviceCommand()
         {
+            App.Current.MainPage.DisplayAlert("Warrning", "Please ensure your iPhone is connected and trusted.", "Ok");
             DetectAndLoadDevice();
-        }
+        } 
 
         private void DetectAndLoadDevice()
         {

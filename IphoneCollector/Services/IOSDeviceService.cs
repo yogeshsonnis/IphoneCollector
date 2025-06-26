@@ -75,7 +75,7 @@ namespace IphoneCollector.Services
             return connectedDevice;
         }
 
-        private string GetUniqueBackupPath(string deviceName,string storageLocation)
+        private string GetUniqueBackupPath(string deviceName, string storageLocation)
         {
             string baseBackupPath = Path.Combine(storageLocation, "Backup");
             Directory.CreateDirectory(baseBackupPath);
@@ -213,6 +213,7 @@ namespace IphoneCollector.Services
                 if (encryptionEnabled)
                 {
                     // Encryption is ON and password is provided
+                    await App.Current.MainPage.DisplayAlert("Password Required", "This device has encrypted backups enabled. Please enter the backup password in Your Device", "Ok");
                     arguments = $"backup --password \"{encryptionPassword}\" \"{backupOutputPath}\"";
 
                 }
@@ -220,17 +221,19 @@ namespace IphoneCollector.Services
                 {
                     if (!string.IsNullOrEmpty(encryptionPassword))
                     {
-                        Debug.WriteLine("ℹ️ Backup encryption is OFF — attempting to enable it.");
-
+                        await App.Current.MainPage.DisplayAlert("Enabling Encryption", "Device does not have encryption enabled. Enabling now...", "OK");
+                        //Debug.WriteLine("ℹ️ Backup encryption is OFF — attempting to enable it.");
                         bool encryptionSet = await EnableBackupEncryptionAsync(udid, encryptionPassword);
 
                         if (!encryptionSet)
                         {
-                            Debug.WriteLine("❌ Failed to enable backup encryption.");
+                            //Debug.WriteLine("❌ Failed to enable backup encryption.");
+                            await App.Current.MainPage.DisplayAlert("Encryption Failed", "Failed to enable backup encryption. Backup canceled.", "OK");
                             return false;
                         }
 
-                        Debug.WriteLine("✅ Backup encryption enabled successfully.");
+                        await App.Current.MainPage.DisplayAlert("Encryption Enabled", "✅ Backup encryption enabled successfully.", "OK");
+                        //Debug.WriteLine("✅ Backup encryption enabled successfully.");
                         // Now encryption is ON — Use password for backup
                         arguments = $"backup --password \"{encryptionPassword}\" \"{backupOutputPath}\"";
                     }
@@ -238,9 +241,11 @@ namespace IphoneCollector.Services
                     {
                         // Encryption OFF and no password to set — proceed without encryption
                         Debug.WriteLine("⚠️ Encryption is OFF and no password provided. Backup will be unencrypted.");
+                        await App.Current.MainPage.DisplayAlert("Unencrypted Backup", "No encryption password provided. Backup will be created without encryption.", "OK");
                         arguments = $"backup \"{backupOutputPath}\"";
                     }
                 }
+
 
                 var processStartInfo = new ProcessStartInfo
                 {
@@ -260,11 +265,22 @@ namespace IphoneCollector.Services
                     while (!process.StandardOutput.EndOfStream)
                     {
                         var line = await process.StandardOutput.ReadLineAsync();
+                        //Debug.WriteLine("Line here: " + line);
+                        if (line.Contains("ErrorCode 105", StringComparison.OrdinalIgnoreCase))
+                        {
+                            MainThread.BeginInvokeOnMainThread(async () =>
+                            {
+                                await App.Current.MainPage.DisplayAlert("Backup Failed", "Insufficient Space", "OK");
+                            });
+
+                            process.Kill(); // Optional: stop process early
+                            break;
+                        }
                         int percent = ParseProgressFromLine(line);
                         if (percent >= 0)
                         {
                             progress?.Report(percent);
-                            Debug.WriteLine("Line here: " + line);
+                            //Debug.WriteLine("Line here: " + line);
                         }
                     }
 
@@ -275,7 +291,7 @@ namespace IphoneCollector.Services
                     while (!process.StandardError.EndOfStream)
                     {
                         var line = await process.StandardError.ReadLineAsync();
-                        Debug.WriteLine("ERROR: " + line);
+                        //Debug.WriteLine("ERROR: " + line);
                     }
                 });
 
@@ -283,9 +299,11 @@ namespace IphoneCollector.Services
                 process.WaitForExit();
 
                 return process.ExitCode == 0;
+
             }
             catch (Exception ex)
             {
+                await App.Current.MainPage.DisplayAlert("Failed", "IPhone Backup failed.", "OK");
                 Debug.WriteLine("Backup failed: " + ex.Message);
                 return false;
             }
@@ -383,7 +401,7 @@ namespace IphoneCollector.Services
 
                 double progressFraction = totalProgressPercent / 100.0;
 
-                if (progressFraction > 0.05)
+                if (progressFraction > 0.05 && elapsedSeconds > 0)
                 {
                     double estimatedTotalSeconds = elapsedSeconds / progressFraction;
                     double remainingSeconds = estimatedTotalSeconds - elapsedSeconds;
