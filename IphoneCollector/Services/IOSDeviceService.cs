@@ -75,9 +75,9 @@ namespace IphoneCollector.Services
             return connectedDevice;
         }
 
-        private string GetUniqueBackupPath(string deviceName)
+        private string GetUniqueBackupPath(string deviceName,string storageLocation)
         {
-            string baseBackupPath = Path.Combine(AppContext.BaseDirectory, "Backup");
+            string baseBackupPath = Path.Combine(storageLocation, "Backup");
             Directory.CreateDirectory(baseBackupPath);
 
             string deviceFolderPath = Path.Combine(baseBackupPath, deviceName);
@@ -193,7 +193,7 @@ namespace IphoneCollector.Services
         //}
 
 
-        public async Task<bool> TriggerBackupAsync(string deviceName, IProgress<int> progress, string encryptionPassword)
+        public async Task<bool> TriggerBackupAsync(string deviceName, IProgress<int> progress, string encryptionPassword, string storageLocation)
         {
             try
             {
@@ -203,7 +203,7 @@ namespace IphoneCollector.Services
                     return false;
                 }
 
-                string backupOutputPath = GetUniqueBackupPath(deviceName);
+                string backupOutputPath = GetUniqueBackupPath(deviceName, storageLocation);
 
                 // Check if device encryption is enabled
                 bool encryptionEnabled = await IsBackupEncryptionEnabledAsync();

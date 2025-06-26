@@ -426,7 +426,7 @@ namespace IphoneCollector.MVVM.ViewModel
                     //Debug.WriteLine($"Estimated Time Remaining: {_iosService.EstimatedTimeDisplay}");
                 });
 
-                bool backupSuccess = await _iosService.TriggerBackupAsync(ConnectedDevice.DeviceName, progress, IncriptionPassword);
+                bool backupSuccess = await _iosService.TriggerBackupAsync(ConnectedDevice.DeviceName, progress, IncriptionPassword, StorageLocation);
 
                 if (!backupSuccess)
                 {
@@ -510,7 +510,24 @@ namespace IphoneCollector.MVVM.ViewModel
 
         private void ExecuteStartNewCollectionNextBtnCommand()
         {
-            CurrentView = new DeviceCredentialsView();
+
+            //if (string.IsNullOrWhiteSpace(StorageLocation) || !Directory.Exists(StorageLocation))
+            //{
+            //    App.Current.MainPage.DisplayAlert("Not Found", " Invalid Storage Location Path", "OK");
+            //}
+            if (string.IsNullOrWhiteSpace(StorageLocation))
+            {
+                App.Current.MainPage.DisplayAlert("Error", " Storage Location cannot be empty.", "OK");
+            }
+            else if (!Directory.Exists(StorageLocation))
+            {
+                App.Current.MainPage.DisplayAlert("Not Found", " Storage Location Not Found", "OK");
+
+            }
+            else
+            {
+                CurrentView = new DeviceCredentialsView();
+            }
             // CurrentView = new StorageOptionsView();
         }
 
