@@ -4,17 +4,68 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="IphoneCollector.MVVM.View.LoadingPopup"
              CanBeDismissedByTappingOutsideOfPopup="False">
-    <Grid HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-        <Border BackgroundColor="White"
-               Padding="20"  StrokeThickness="0">
-            <StackLayout Spacing="10" HorizontalOptions="Center">
-                <ActivityIndicator IsRunning="True" Color="DarkGreen"  WidthRequest="150" HeightRequest="150"/>
-                <VerticalStackLayout  Spacing="10">
-                    <Label Text="{Binding ProgressValue, StringFormat='{0:P0}'}" FontSize="16" HorizontalOptions="Center"/>
-                    <Label Text="{Binding EstimatedTimeDisplay}" FontSize="16" HorizontalOptions="Center"/>
-                <!--<Label Text="Backing up..."  FontSize="Header" TextColor="Gray" Margin="150,-10,0,0" HorizontalTextAlignment="Center"/>-->
-                </VerticalStackLayout>
-            </StackLayout>
-        </Border>
+      <Grid HorizontalOptions="Center"
+      VerticalOptions="Center">
+        <Grid HorizontalOptions="Center"
+              VerticalOptions="Center">
+            <Border BackgroundColor="White"
+                WidthRequest="700"
+                HeightRequest="600"
+                Padding="20"
+                StrokeThickness="0">
+
+                <!-- Rounded corners -->
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20" />
+                </Border.StrokeShape>
+
+                <!-- Add shadow -->
+                <Border.Shadow>
+                    <Shadow Brush="Black" Offset="10,10" Radius="20" Opacity="0.4" />
+                </Border.Shadow>
+
+                <StackLayout Spacing="10" HorizontalOptions="Center">
+                    <ActivityIndicator IsRunning="True" Color="DarkGreen"
+                                   WidthRequest="150" HeightRequest="150"/>
+
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Backing up iPhone" FontSize="24" TextColor="Gray"
+                           HorizontalTextAlignment="Center"/>
+
+                        <ProgressBar ProgressColor="Green"
+                         HeightRequest="20" 
+                         WidthRequest="500"        
+                         Progress="{Binding ProgressValue}"
+                         HorizontalOptions="Center" />
+
+
+                        <Label Text="{Binding ProgressDisplay}" FontSize="16" HorizontalOptions="Center"/>
+                        <HorizontalStackLayout HorizontalOptions="Center">
+                            <Label Text="Transfer Speed =" FontSize="16" Margin="0,0,5,0"/>
+                            <Label Text="{Binding TransferSpeed, StringFormat='{}{0:F3} MB/s'}" FontSize="16" HorizontalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout HorizontalOptions="Center">
+                            <Label Text="Total Files =" FontSize="16" Margin="0,0,5,0"/>
+                            <Label Text="{Binding FilesProgressDisplay}" FontSize="16" />
+                        </HorizontalStackLayout>
+
+                        <HorizontalStackLayout HorizontalOptions="Center">
+                            <Label Text="Backup Size =" FontSize="16" Margin="0,0,5,0"/>
+                            <Label Text="{Binding BackupSize}" FontSize="16" />
+                        </HorizontalStackLayout>
+                        
+                        <HorizontalStackLayout >
+                            <Label Text="Transferring =" FontSize="16" Margin="0,0,5,0"/>
+                            <Label Text="{Binding StorageLocation}" LineBreakMode="WordWrap" WidthRequest="400" FontSize="16" />
+                        </HorizontalStackLayout>
+
+                        <HorizontalStackLayout HorizontalOptions="Center" Margin="0,20,0,0">
+                            <Button Text="Pause" Margin="0,0,10,0"/>
+                            <Button Text="Cancel"/>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </StackLayout>
+            </Border>
+        </Grid>
     </Grid>
 </toolkit:Popup>

@@ -193,7 +193,7 @@ namespace IphoneCollector.Services
         //}
 
 
-        public async Task<bool> TriggerBackupAsync(string deviceName, IProgress<int> progress, string encryptionPassword, string storageLocation)
+        public async Task<bool> TriggerBackupAsync(string deviceName, IProgress<BackupProgressInfo> progress, string encryptionPassword, string storageLocation)
         {
             try
             {
@@ -205,48 +205,43 @@ namespace IphoneCollector.Services
 
                 string backupOutputPath = GetUniqueBackupPath(deviceName, storageLocation);
 
-                // Check if device encryption is enabled
-                bool encryptionEnabled = await IsBackupEncryptionEnabledAsync();
+                // Step 1: Estimate files to be backed up
+                int estimatedFiles = await EstimateTotalFilesToBackupAsync();
 
+                // Step 2: Check encryption state
+                bool encryptionEnabled = await IsBackupEncryptionEnabledAsync();
                 string arguments;
 
                 if (encryptionEnabled)
                 {
-                    // Encryption is ON and password is provided
-                    await App.Current.MainPage.DisplayAlert("Password Required", "This device has encrypted backups enabled. Please enter the backup password in Your Device", "Ok");
+                    await App.Current.MainPage.DisplayAlert("Password Required", "This device has encrypted backups enabled. Please enter the backup password in Your Device", "OK");
                     arguments = $"backup --password \"{encryptionPassword}\" \"{backupOutputPath}\"";
-
                 }
                 else
                 {
                     if (!string.IsNullOrEmpty(encryptionPassword))
                     {
                         await App.Current.MainPage.DisplayAlert("Enabling Encryption", "Device does not have encryption enabled. Enabling now...", "OK");
-                        //Debug.WriteLine("ℹ️ Backup encryption is OFF — attempting to enable it.");
                         bool encryptionSet = await EnableBackupEncryptionAsync(udid, encryptionPassword);
 
                         if (!encryptionSet)
                         {
-                            //Debug.WriteLine("❌ Failed to enable backup encryption.");
                             await App.Current.MainPage.DisplayAlert("Encryption Failed", "Failed to enable backup encryption. Backup canceled.", "OK");
                             return false;
                         }
 
                         await App.Current.MainPage.DisplayAlert("Encryption Enabled", "✅ Backup encryption enabled successfully.", "OK");
-                        //Debug.WriteLine("✅ Backup encryption enabled successfully.");
-                        // Now encryption is ON — Use password for backup
                         arguments = $"backup --password \"{encryptionPassword}\" \"{backupOutputPath}\"";
                     }
                     else
                     {
-                        // Encryption OFF and no password to set — proceed without encryption
                         Debug.WriteLine("⚠️ Encryption is OFF and no password provided. Backup will be unencrypted.");
                         await App.Current.MainPage.DisplayAlert("Unencrypted Backup", "No encryption password provided. Backup will be created without encryption.", "OK");
                         arguments = $"backup \"{backupOutputPath}\"";
                     }
                 }
 
-
+                // Step 3: Start backup
                 var processStartInfo = new ProcessStartInfo
                 {
                     FileName = toolPath,
@@ -260,54 +255,191 @@ namespace IphoneCollector.Services
                 using var process = new Process { StartInfo = processStartInfo };
                 process.Start();
 
+                // Step 4: Real-time tracking task
+                var speedTrackingTask = Task.Run(async () =>
+                {
+                    long lastSize = 0;
+                    DateTime lastTime = DateTime.Now;
+
+                    while (!process.HasExited)
+                    {
+                        long currentSize = GetDirectorySize(backupOutputPath);
+                        int fileCount = GetFileCount(backupOutputPath);
+                        DateTime currentTime = DateTime.Now;
+
+                        double elapsedSeconds = (currentTime - lastTime).TotalSeconds;
+                        double speedMBps = elapsedSeconds > 0 ? (currentSize - lastSize) / 1024.0 / 1024.0 / elapsedSeconds : 0;
+
+                        int percent = estimatedFiles > 0 ? (int)((fileCount / (double)estimatedFiles) * 100) : 0;
+
+                        progress?.Report(new BackupProgressInfo
+                        {
+                            Percent = percent,
+                            Size = ConvertSizeToReadable(currentSize),
+                            FilesWritten = fileCount,
+                            EstimatedFiles = estimatedFiles,
+                            SpeedMBps = speedMBps
+                        });
+
+                        lastSize = currentSize;
+                        lastTime = currentTime;
+                        await Task.Delay(1000);
+                    }
+                });
+
+                // Step 5: Output parsing task
                 var outputTask = Task.Run(async () =>
                 {
                     while (!process.StandardOutput.EndOfStream)
                     {
                         var line = await process.StandardOutput.ReadLineAsync();
-                        //Debug.WriteLine("Line here: " + line);
+
                         if (line.Contains("ErrorCode 105", StringComparison.OrdinalIgnoreCase))
                         {
                             MainThread.BeginInvokeOnMainThread(async () =>
                             {
                                 await App.Current.MainPage.DisplayAlert("Backup Failed", "Insufficient Space", "OK");
                             });
-
-                            process.Kill(); // Optional: stop process early
+                            process.Kill();
                             break;
                         }
-                        int percent = ParseProgressFromLine(line);
-                        if (percent >= 0)
-                        {
-                            progress?.Report(percent);
-                            //Debug.WriteLine("Line here: " + line);
-                        }
                     }
-
                 });
 
+                // Step 6: Error stream monitor
                 var errorTask = Task.Run(async () =>
                 {
                     while (!process.StandardError.EndOfStream)
                     {
                         var line = await process.StandardError.ReadLineAsync();
-                        //Debug.WriteLine("ERROR: " + line);
+                        Debug.WriteLine("ERROR: " + line);
                     }
                 });
 
-                await Task.WhenAll(outputTask, errorTask);
+                await Task.WhenAll(outputTask, errorTask, speedTrackingTask);
                 process.WaitForExit();
 
                 return process.ExitCode == 0;
-
             }
             catch (Exception ex)
             {
-                await App.Current.MainPage.DisplayAlert("Failed", "IPhone Backup failed.", "OK");
+                await App.Current.MainPage.DisplayAlert("Failed", "iPhone Backup failed.", "OK");
                 Debug.WriteLine("Backup failed: " + ex.Message);
                 return false;
             }
         }
+
+
+        private async Task<int> EstimateTotalFilesToBackupAsync()
+        {
+            int count = 0;
+            try
+            {
+                var listProcess = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = toolPath,
+                        Arguments = "list",
+                        RedirectStandardOutput = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    }
+                };
+
+                listProcess.Start();
+
+                while (!listProcess.StandardOutput.EndOfStream)
+                {
+                    var line = await listProcess.StandardOutput.ReadLineAsync();
+                    if (!string.IsNullOrWhiteSpace(line))
+                        count++;
+                }
+
+                listProcess.WaitForExit();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("EstimateTotalFilesToBackupAsync failed: " + ex.Message);
+            }
+
+            return count;
+        }
+
+
+        //private long GetDirectorySize(string path)
+        //{
+        //    return Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories)
+        //        .Sum(file => new FileInfo(file).Length);
+        //}
+
+
+        //private int GetFileCount(string path)
+        //{
+        //    return Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories).Count();
+        //}
+
+        private long GetDirectorySize(string path)
+        {
+            long totalSize = 0;
+            foreach (var file in Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories))
+            {
+                try
+                {
+                    totalSize += new FileInfo(file).Length;
+                }
+                catch (FileNotFoundException)
+                {
+                    // File disappeared between enumeration and reading; skip it safely
+                    Debug.WriteLine($"Skipped missing file during size calc: {file}");
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    Debug.WriteLine($"Skipped inaccessible file during size calc: {file}");
+                }
+            }
+            return totalSize;
+        }
+
+
+        private int GetFileCount(string path)
+        {
+            int count = 0;
+            foreach (var file in Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories))
+            {
+                try
+                {
+                    // Accessing file to catch potential FileNotFound
+                    var _ = new FileInfo(file).Exists;
+                    count++;
+                }
+                catch (FileNotFoundException)
+                {
+                    Debug.WriteLine($"Skipped missing file during count: {file}");
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    Debug.WriteLine($"Skipped inaccessible file during count: {file}");
+                }
+            }
+            return count;
+        }
+
+
+        private string ConvertSizeToReadable(long bytes)
+        {
+            string[] sizes = { "B", "KB", "MB", "GB", "TB" };
+            double len = bytes;
+            int order = 0;
+            while (len >= 1024 && order < sizes.Length - 1)
+            {
+                order++;
+                len /= 1024;
+            }
+            return $"{len:0.##} {sizes[order]}";
+        }
+
+
 
         public async Task<bool> EnableBackupEncryptionAsync(string udid, string newPassword)
         {

@@ -281,18 +281,6 @@ namespace IphoneCollector.MVVM.ViewModel
             }
         }
 
-        private double _progressValue;
-
-        public double ProgressValue
-        {
-            get { return _progressValue; }
-            set
-            {
-                _progressValue = value;
-                OnPropertyChanged();
-            }
-        }
-
         private string _estimatedTimeDisplay = "Estimated Time Remaining: Calculating...";
 
         public string EstimatedTimeDisplay
@@ -318,6 +306,73 @@ namespace IphoneCollector.MVVM.ViewModel
             }
         }
 
+
+        private string _backupSize;
+        public string BackupSize
+        {
+            get => _backupSize;
+            set
+            {
+                _backupSize = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int _filesWritten;
+        public int FilesWritten
+        {
+            get => _filesWritten;
+            set
+            {
+                _filesWritten = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(FilesProgressDisplay));
+            }
+        }
+
+        private int _estimatedFiles;
+        public int EstimatedFiles
+        {
+            get => _estimatedFiles;
+            set
+            {
+                _estimatedFiles = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(FilesProgressDisplay));
+            }
+        }
+
+
+
+        public string FilesProgressDisplay => $"{FilesWritten/1000} / {EstimatedFiles} files";
+
+        private double _transferSpeed;
+        public double TransferSpeed
+        {
+            get => _transferSpeed;
+            set
+            {
+                _transferSpeed = value;
+                OnPropertyChanged();
+            }
+        }
+        public string ProgressDisplay => $"{ProgressPercent:F0}% out of 100%";
+
+        private double _progressPercent;
+        public double ProgressPercent
+        {
+            get => _progressPercent;
+            set
+            {
+                _progressPercent = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(ProgressDisplay));
+                OnPropertyChanged(nameof(ProgressValue));
+
+            }
+        }
+
+        public double ProgressValue => ProgressPercent / 100.0;
 
         #endregion
 
@@ -418,15 +473,21 @@ namespace IphoneCollector.MVVM.ViewModel
             {
                 Application.Current.MainPage.ShowPopup(popup);
 
-                var progress = new Progress<int>(value =>
+                var progress = new Progress<BackupProgressInfo>(info =>
                 {
-                    ProgressValue = value / 100.0;
-                    EstimatedTimeDisplay = $"Estimated Time Remaining: {_iosService.EstimatedTimeDisplay}";
-                    Debug.WriteLine($"Progress: {ProgressValue}%");
-                    //Debug.WriteLine($"Estimated Time Remaining: {_iosService.EstimatedTimeDisplay}");
+                    BackupSize = info.Size;
+                    FilesWritten = info.FilesWritten;
+                    EstimatedFiles = info.EstimatedFiles;
+                    TransferSpeed = info.SpeedMBps;
+                    ProgressPercent = info.Percent / 1000.0;
                 });
 
-                bool backupSuccess = await _iosService.TriggerBackupAsync(ConnectedDevice.DeviceName, progress, EncryptionPassword, StorageLocation);
+                bool backupSuccess = await _iosService.TriggerBackupAsync(
+                    ConnectedDevice.DeviceName,
+                    progress,
+                    EncryptionPassword,
+                    StorageLocation);
+
 
                 if (!backupSuccess)
                 {
@@ -538,9 +599,8 @@ namespace IphoneCollector.MVVM.ViewModel
 
         private void ExecuteRescanDeviceCommand()
         {
-            App.Current.MainPage.DisplayAlert("Warrning", "Please ensure your iPhone is connected and trusted.", "Ok");
             DetectAndLoadDevice();
-        } 
+        }
 
         private void DetectAndLoadDevice()
         {
