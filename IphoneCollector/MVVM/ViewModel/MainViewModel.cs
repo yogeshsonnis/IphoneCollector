@@ -1,18 +1,12 @@
-﻿using CommunityToolkit.Maui.Views;
-using iMobileDevice;
+﻿
+using CommunityToolkit.Maui.Views;
+using IphoneCollector.Data;
 using IphoneCollector.Helper;
 using IphoneCollector.MVVM.Model;
 using IphoneCollector.MVVM.View;
 using IphoneCollector.Services;
-using Microsoft.Maui.Controls;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Dynamic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using static IphoneCollector.MVVM.Model.ConnectedDevice;
 
@@ -24,6 +18,8 @@ namespace IphoneCollector.MVVM.ViewModel
         private readonly AndroidDeviceService _deviceService = new();
 
         private readonly IOSDeviceService _iosService = new();
+
+        private readonly LocalDbService _dbServices;
 
 
         private ConnectedDevice _connectedDevice;
@@ -344,7 +340,7 @@ namespace IphoneCollector.MVVM.ViewModel
 
 
 
-        public string FilesProgressDisplay => $"{FilesWritten/1000} / {EstimatedFiles} files";
+        public string FilesProgressDisplay => $"{FilesWritten / 1000} / {EstimatedFiles} files";
 
         private double _transferSpeed;
         public double TransferSpeed
@@ -397,9 +393,11 @@ namespace IphoneCollector.MVVM.ViewModel
 
         #endregion
 
-        public MainViewModel()
+        public MainViewModel(LocalDbService dbService)
         {
+            _dbServices = dbService;
             DetectAndLoadDevice();
+
             //ConnectedDevicesList.Add(new ConnectedDevice
             //{
             //    DeviceName = "iPhone 14",
@@ -408,7 +406,7 @@ namespace IphoneCollector.MVVM.ViewModel
             //});
 
             CurrentView = new NewCollectionView();
-            NewCollectionNextBtnCommand = new RelayCommand(ExecuteStartNewCollectionNextBtnCommand);
+            NewCollectionNextBtnCommand = new Command(async () => await ExecuteStartNewCollectionNextBtnCommand());
             StorageOptionsPrevCommand = new RelayCommand(ExecuteStartStorageOptionsPrevCommand);
             StorageOptionsNextCommand = new RelayCommand(ExecuteStorageOptionsNextCommand);
             StartUploadCommand = new RelayCommand(ExecuteStartUploadCommand);
@@ -569,27 +567,80 @@ namespace IphoneCollector.MVVM.ViewModel
             CurrentView = new StartCollectionView();
         }
 
-        private void ExecuteStartNewCollectionNextBtnCommand()
+        private async Task ExecuteStartNewCollectionNextBtnCommand()
         {
+            try
+            {
+                //if (string.IsNullOrWhiteSpace(StorageLocation) || !Directory.Exists(StorageLocation))
+                //{
+                //    App.Current.MainPage.DisplayAlert("Not Found", " Invalid Storage Location Path", "OK");
+                //}
+              
+                // Validate inputs
+                bool isCaseNameEmpty = string.IsNullOrWhiteSpace(CaseName);
+                bool isExaminerEmpty = string.IsNullOrWhiteSpace(ExaminerName);
+                bool isMatterNumberEmpty = string.IsNullOrWhiteSpace(MatterNumber);
 
-            //if (string.IsNullOrWhiteSpace(StorageLocation) || !Directory.Exists(StorageLocation))
-            //{
-            //    App.Current.MainPage.DisplayAlert("Not Found", " Invalid Storage Location Path", "OK");
-            //}
-            if (string.IsNullOrWhiteSpace(StorageLocation))
-            {
-                App.Current.MainPage.DisplayAlert("Error", " Storage Location cannot be empty.", "OK");
-            }
-            else if (!Directory.Exists(StorageLocation))
-            {
-                App.Current.MainPage.DisplayAlert("Not Found", " Storage Location Not Found", "OK");
+                // Show general message if all fields are empty
+                if (isCaseNameEmpty && isMatterNumberEmpty && isExaminerEmpty)
+                {
+                    await App.Current.MainPage.DisplayAlert("Warning", "Please fill out all fields before adding the case.", "OK");
+                    return;
+                }
 
-            }
-            else
-            {
+                // Show specific messages
+                if (isCaseNameEmpty)
+                {
+                    await App.Current.MainPage.DisplayAlert("Warning", "Please enter the Case Name.", "OK");
+                    return;
+                }
+
+                if (isExaminerEmpty)
+                {
+                    await App.Current.MainPage.DisplayAlert("Warning", "Please enter the Examiner name.", "OK");
+                    return;
+                }
+                if (isMatterNumberEmpty)
+                {
+                    await App.Current.MainPage.DisplayAlert("Warning", "Please enter the Matter Number.", "OK");
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(StorageLocation))
+                {
+                    await App.Current.MainPage.DisplayAlert("Error", " Storage Location cannot be empty.", "OK");
+                    return;
+                }
+                if (!Directory.Exists(StorageLocation))
+                {
+                    await App.Current.MainPage.DisplayAlert("Not Found", " Storage Location Not Found", "OK");
+                    return;
+                }
+
+                var newCase = new Case
+                {
+                    CaseName = CaseName.Trim() ,
+                    ExaminerName = ExaminerName.Trim() ,
+                    MatterNumber = MatterNumber.Trim() ,
+                    StorageLocation = StorageLocation,
+                };
+
+                await _dbServices.CreateCase(newCase);
+
+                await App.Current.MainPage.DisplayAlert("Sucess", " Case Added Succesfully", "OK");
+
+                CaseName = "";
+                ExaminerName = "";
+                MatterNumber = "";
+             
+
                 CurrentView = new DeviceCredentialsView();
+
             }
-            // CurrentView = new StorageOptionsView();
+            catch (Exception ex)
+            {
+                await App.Current.MainPage.DisplayAlert("Error", $"Something went wrong:\n{ex.Message}", "OK");
+            }
         }
 
         private void ExecuteStartCollectionNextCommand()

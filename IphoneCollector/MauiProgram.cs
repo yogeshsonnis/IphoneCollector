@@ -1,4 +1,6 @@
 ﻿using CommunityToolkit.Maui;
+using IphoneCollector.Data;
+using IphoneCollector.MVVM.ViewModel;
 using Microsoft.Extensions.Logging;
 
 namespace IphoneCollector
@@ -17,6 +19,9 @@ namespace IphoneCollector
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
+            builder.Services.AddSingleton<LocalDbService>();
+            builder.Services.AddSingleton<MainViewModel>();
+            builder.Services.AddTransient<MainPage>();
 #if DEBUG
             builder.Logging.AddDebug();
 #endif

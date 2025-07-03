@@ -5,10 +5,10 @@ namespace IphoneCollector
     public partial class MainPage : ContentPage
     {
 
-        public MainPage()
+        public MainPage(MainViewModel viewModel)
         {
             InitializeComponent();
-            BindingContext = new MainViewModel();
+            BindingContext = viewModel;
         }
 
         private void OnSettingsTapped(object sender, TappedEventArgs e)
