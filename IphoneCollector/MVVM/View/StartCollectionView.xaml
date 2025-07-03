@@ -123,9 +123,9 @@
                             <Button Text="Next" WidthRequest="100" HorizontalOptions="End" Margin="0,20,0,0" Command="{Binding StartCollectionNextBtnCommand}"/>
 
                         </Grid>
-                        <HorizontalStackLayout HorizontalOptions="End">
+                        <!--<HorizontalStackLayout HorizontalOptions="End">
                             <Button Text="Backup Device" IsEnabled="{Binding IsDeviceConnected}"  Margin="0,20,0,0" Command="{Binding BackupDataCommand}"/>
-                        </HorizontalStackLayout>
+                        </HorizontalStackLayout>-->
                         <Button Text="🔄 Rescan for Device" WidthRequest="170" HorizontalOptions="Center" Margin="0,20,0,0" Command="{Binding RescanDeviceCommand}"/>
                     </VerticalStackLayout>
                 </FlexLayout>

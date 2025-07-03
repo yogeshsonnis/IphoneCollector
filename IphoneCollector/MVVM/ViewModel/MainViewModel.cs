@@ -370,6 +370,121 @@ namespace IphoneCollector.MVVM.ViewModel
 
         public double ProgressValue => ProgressPercent / 100.0;
 
+
+        private string _hardDriveInventory = "MacBookPro18,2(2TB), External SSD";
+
+        public string HardDriveInventory
+        {
+            get { return _hardDriveInventory; }
+            set
+            {
+                _hardDriveInventory = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _hardDrivePreserved = "Yes";
+
+        public string HardDrivePreserved
+        {
+            get { return _hardDrivePreserved; }
+            set
+            {
+                _hardDrivePreserved = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _custodianName = "John Doe";
+
+        public string CustodianName
+        {
+            get { return _custodianName; }
+            set
+            {
+                _custodianName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _custodianEmail = "john.doe@example.com";
+        public string CustodianEmail
+        {
+            get { return _custodianEmail; }
+            set
+            {
+                _custodianEmail = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _collectionMode = "Remote Collection";
+        public string CollectionMode
+        {
+            get { return _collectionMode; }
+            set
+            {
+                _collectionMode = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _custodianType = "Full Disk";
+        public string CustodianType
+        {
+            get { return _custodianType; }
+            set
+            {
+                _custodianType = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _dataSize = "1.14 TB";
+        public string DataSize
+        {
+            get { return _dataSize; }
+            set
+            {
+                _dataSize = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _hash = "#sgdvasvdasfdsa3465";
+        public string Hash
+        {
+            get { return _hash; }
+            set
+            {
+                _hash = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _custodianDate = "2024-06-18";
+        public string CustodianDate
+        {
+            get { return _custodianDate; }
+            set
+            {
+                _custodianDate = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _dataTransferredTo = "Aws S3(Forensics Backup)";
+        public string DataTransferredTo
+        {
+            get { return _dataTransferredTo; }
+            set
+            {
+                _dataTransferredTo = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         #endregion
 
 
@@ -389,6 +504,8 @@ namespace IphoneCollector.MVVM.ViewModel
         public ICommand ShowPickerCommand { get; set; }
         public ICommand DeviceCredentialsPrevBtnCommand { get; set; }
         public ICommand DeviceCredentialsNextBtnCommand { get; set; }
+        public ICommand SummaryNextBtnCommand { get; set; }
+        public ICommand SummaryPrevBtnCommand { get; set; }
 
 
         #endregion
@@ -419,32 +536,45 @@ namespace IphoneCollector.MVVM.ViewModel
             DeviceCredentialsNextBtnCommand = new RelayCommand(ExecuteDeviceDeviceCredentialsNextBtnCommand);
             BackupDataCommand = new RelayCommand(ExecuteBackupDataCommand);
             ShowPickerCommand = new RelayCommand(ExecuteShowPickerCommand);
+            SummaryNextBtnCommand = new RelayCommand(ExecuteSummaryNextBtnCommand);
+            SummaryPrevBtnCommand = new RelayCommand(ExecuteSummarySummaryPrevBtnCommand);
 
+        }
+
+        private void ExecuteSummaryNextBtnCommand()
+        {
+            CurrentView = new StorageOptionsView();
+        }
+
+        private void ExecuteSummarySummaryPrevBtnCommand()
+        {
+            CurrentView = new DeviceCredentialsView();
         }
 
         private void ExecuteDeviceDeviceCredentialsNextBtnCommand()
         {
-            CurrentView = new StorageOptionsView();
+            // CurrentView = new StorageOptionsView();
+            CurrentView = new SummaryView();
         }
 
         private void ExecuteDeviceCredentialsPrevBtnCommand()
         {
-            CurrentView = new NewCollectionView();
+            CurrentView = new StartCollectionView();
         }
 
         private void ExecuteStartUploadPrevCommand()
         {
-            CurrentView = new StartCollectionView();
+            CurrentView = new StorageOptionsView();
         }
 
         private void ExecuteStartCollectionPrevBtnCommand()
         {
-            CurrentView = new StorageOptionsView();
+            CurrentView = new NewCollectionView();
         }
 
         private void ExecuteStartStorageOptionsPrevCommand()
         {
-            CurrentView = new DeviceCredentialsView();
+            CurrentView = new SummaryView();
         }
 
         private void ExecuteShowPickerCommand()
@@ -564,7 +694,7 @@ namespace IphoneCollector.MVVM.ViewModel
 
         private void ExecuteStorageOptionsNextCommand()
         {
-            CurrentView = new StartCollectionView();
+            CurrentView = new CloudUploadView();
         }
 
         private async Task ExecuteStartNewCollectionNextBtnCommand()
@@ -575,7 +705,7 @@ namespace IphoneCollector.MVVM.ViewModel
                 //{
                 //    App.Current.MainPage.DisplayAlert("Not Found", " Invalid Storage Location Path", "OK");
                 //}
-              
+
                 // Validate inputs
                 bool isCaseNameEmpty = string.IsNullOrWhiteSpace(CaseName);
                 bool isExaminerEmpty = string.IsNullOrWhiteSpace(ExaminerName);
@@ -619,9 +749,9 @@ namespace IphoneCollector.MVVM.ViewModel
 
                 var newCase = new Case
                 {
-                    CaseName = CaseName.Trim() ,
-                    ExaminerName = ExaminerName.Trim() ,
-                    MatterNumber = MatterNumber.Trim() ,
+                    CaseName = CaseName.Trim(),
+                    ExaminerName = ExaminerName.Trim(),
+                    MatterNumber = MatterNumber.Trim(),
                     StorageLocation = StorageLocation,
                 };
 
@@ -632,9 +762,9 @@ namespace IphoneCollector.MVVM.ViewModel
                 CaseName = "";
                 ExaminerName = "";
                 MatterNumber = "";
-             
 
-                CurrentView = new DeviceCredentialsView();
+
+                CurrentView = new StartCollectionView();
 
             }
             catch (Exception ex)
@@ -645,7 +775,7 @@ namespace IphoneCollector.MVVM.ViewModel
 
         private void ExecuteStartCollectionNextCommand()
         {
-            CurrentView = new CloudUploadView();
+            CurrentView = new DeviceCredentialsView();
         }
 
         private void ExecuteRescanDeviceCommand()

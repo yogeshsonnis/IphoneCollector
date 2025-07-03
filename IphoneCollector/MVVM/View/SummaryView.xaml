@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="IphoneCollector.MVVM.View.SummaryView">
+    <VerticalStackLayout>
+        <Grid Padding="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border StrokeThickness="0"  Background="#000000"  HorizontalOptions="Center" Margin="0,10,0,0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+                <FlexLayout 
+          Direction="Row"
+          Padding="5"
+          HorizontalOptions="Center" 
+          JustifyContent="Start"
+          VerticalOptions="CenterAndExpand"
+          AlignItems="Start">
+                    <Label Text="1. New Collection"   Style="{StaticResource MenuBarLabel}"/>
+                    <Label Text="2. Device Credentials"  Style="{StaticResource MenuBarLabel}"/>
+                    <Label Text="3. Storage Options"  Style="{StaticResource MenuBarLabel}"/>
+                    <Label Text="4. Start Collection"  Style="{StaticResource MenuBarLabel}"/>
+                    <Label Text="5. Cloud Upload"  Style="{StaticResource MenuBarLabel}"/>
+                </FlexLayout>
+            </Border>
+            <Border 
+        Grid.Row="1"
+        Background="{StaticResource White}"
+        StrokeThickness="0"
+        Margin="0,10,0,0"
+        HorizontalOptions="Center"
+        Padding="16"
+        MinimumHeightRequest="300"
+        MaximumWidthRequest="810">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="#0D000000" Offset="0,2" Radius="8" Opacity="1"/>
+                </Border.Shadow>
+                <VerticalStackLayout  Margin="0,10,0,0"  WidthRequest="750">
+                    <Label Text="Summary"  FontAttributes="Bold"  TextColor="#202124" FontFamily="Roboto" FontSize="23" HorizontalTextAlignment="Center"/>
+
+                    <Border 
+
+Background="{StaticResource White}"
+StrokeThickness="0"
+Margin="0,10,0,0"
+HorizontalOptions="Center"
+Padding="16"
+>
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#0D000000" Offset="0,2" Radius="8" Opacity="1"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout>
+
+
+                            <ScrollView HeightRequest="500" WidthRequest="500" Margin="0,20,0,0">
+                                <VerticalStackLayout Padding="10" >
+
+                                    <Label Text="Mac Profile" TextColor="#1f3580" FontSize="16" FontAttributes="Bold"/>
+
+                                    <Grid ColumnDefinitions="200, *" Margin="5,8,0,0">
+                                        <Label Text="Hard Drive Inventory" FontAttributes="Bold" Grid.Column="0"/>
+                                        <Label Text="{Binding HardDriveInventory}" Grid.Column="1" HorizontalOptions="Start"/>
+                                    </Grid>
+
+                                    <Grid ColumnDefinitions="200, *" Margin="5,0,0,0">
+                                        <Label Text="Hard Drive Preserved" FontAttributes="Bold" Grid.Column="0"/>
+                                        <Label Text="{Binding HardDrivePreserved}" Grid.Column="1" HorizontalOptions="Start"/>
+                                    </Grid>
+
+                                    <Label Text="Custodian(s)" Margin="0,20,0,0" TextColor="#1f3580" FontSize="16" FontAttributes="Bold"/>
+
+                                    <Grid ColumnDefinitions="200, *" Margin="5,10,0,0">
+                                        <Label Text="Custodian Name" FontAttributes="Bold" Grid.Column="0"/>
+                                        <Label Text="{Binding CustodianName}" Grid.Column="1" HorizontalOptions="Start"/>
+                                    </Grid>
+
+                                    <Grid ColumnDefinitions="200, *" Margin="5,0,0,0">
+                                        <Label Text="Custodian Email" FontAttributes="Bold" Grid.Column="0"/>
+                                        <Label Text="{Binding CustodianEmail}" Grid.Column="1" HorizontalOptions="Start"/>
+                                    </Grid>
+
+                                    <Label Text="Disk Imaging" Margin="0,20,0,0" TextColor="#1f3580" FontSize="16" FontAttributes="Bold"/>
+
+                                    <Grid ColumnDefinitions="200, *" Margin="5,10,0,0">
+                                        <Label Text="Collection Mode" FontAttributes="Bold" Grid.Column="0"/>
+                                        <Label Text="{Binding CollectionMode}" Grid.Column="1" HorizontalOptions="Start"/>
+                                    </Grid>
+
+                                    <Grid ColumnDefinitions="200, *" Margin="5,0,0,0">
+                                        <Label Text="Custodian Type" FontAttributes="Bold" Grid.Column="0"/>
+                                        <Label Text="{Binding CustodianType}" Grid.Column="1" HorizontalOptions="Start"/>
+                                    </Grid>
+
+                                    <Grid ColumnDefinitions="200, *" Margin="5,0,0,0">
+                                        <Label Text="Data Size" FontAttributes="Bold" Grid.Column="0"/>
+                                        <Label Text="{Binding DataSize}" Grid.Column="1" HorizontalOptions="Start"/>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="200, *" Margin="5,0,0,0">
+                                        <Label Text="Hash" FontAttributes="Bold" Grid.Column="0"/>
+                                        <Label Text="{Binding Hash}" Grid.Column="1" HorizontalOptions="Start"/>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="200, *" Margin="5,0,0,0">
+                                        <Label Text="Custodian Date" FontAttributes="Bold" Grid.Column="0"/>
+                                        <Label Text="{Binding CustodianDate}" Grid.Column="1" HorizontalOptions="Start"/>
+                                    </Grid>
+                                    <Label Text="Storage" Margin="0,20,0,0" TextColor="#1f3580" FontSize="16" FontAttributes="Bold"/>
+
+                                    <Grid ColumnDefinitions="200, *" Margin="5,10,0,0">
+                                        <Label Text="Data Transferred To" FontAttributes="Bold" Grid.Column="0"/>
+                                        <Label Text="{Binding DataTransferredTo}" Grid.Column="1" HorizontalOptions="Start"/>
+                                    </Grid>
+
+                                    <Label Text="Disk Imaging" Margin="0,20,0,0" TextColor="#1f3580" FontSize="16" FontAttributes="Bold"/>
+
+                                    <Grid ColumnDefinitions="200, *" Margin="5,10,0,0">
+                                        <Label Text="Collection Mode" FontAttributes="Bold" Grid.Column="0"/>
+                                        <Label Text="Remote Collection" Grid.Column="1" HorizontalOptions="Start"/>
+                                    </Grid>
+
+                                    <Grid ColumnDefinitions="200, *" Margin="5,0,0,0">
+                                        <Label Text="Custodian Type" FontAttributes="Bold" Grid.Column="0"/>
+                                        <Label Text="Full Disk" Grid.Column="1" HorizontalOptions="Start"/>
+                                    </Grid>
+
+                                    <Grid ColumnDefinitions="200, *" Margin="5,0,0,0">
+                                        <Label Text="Data Size" FontAttributes="Bold" Grid.Column="0"/>
+                                        <Label Text="1.14 TB" Grid.Column="1" HorizontalOptions="Start"/>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="200, *" Margin="5,0,0,0">
+                                        <Label Text="Hash" FontAttributes="Bold" Grid.Column="0"/>
+                                        <Label Text="#sgdvasvdasfdsa3465" Grid.Column="1" HorizontalOptions="Start"/>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="200, *" Margin="5,0,0,0">
+                                        <Label Text="Custodian Date" FontAttributes="Bold" Grid.Column="0"/>
+                                        <Label Text="2024-06-18" Grid.Column="1" HorizontalOptions="Start"/>
+                                    </Grid>
+
+                                    <!-- Repeat more rows with the same Grid structure as needed -->
+
+                                </VerticalStackLayout>
+                            </ScrollView>
+                            <!--<HorizontalStackLayout Margin="0,20,0,0" HorizontalOptions="End">
+                                <Button Text="Export To PDF" WidthRequest="180" Background="Transparent" TextColor="Blue" BorderColor="Blue" BorderWidth="1" FontAttributes="Bold"  Margin="0,20,10,0" Command="{Binding ExportPdfCommand}"/>
+                                <Button Text="Start Imaging" WidthRequest="180"  Margin="0,20,-10,0" Command="{Binding BackupCommand}"/>
+                            </HorizontalStackLayout>-->
+                           
+                        </VerticalStackLayout>
+                    </Border>
+                    <Grid>
+                        <Button Text="Prev" WidthRequest="100" HorizontalOptions="Start" Margin="10,20,0,0" Command="{Binding SummaryPrevBtnCommand}"/>
+                        <Button Text="Backup Device" WidthRequest="150" IsEnabled="{Binding IsDeviceConnected}"  Margin="20,20,0,0" Command="{Binding BackupDataCommand}"/>
+                        <Button Text="Next" WidthRequest="100" HorizontalOptions="End" Margin="0,20,10,0" Command="{Binding SummaryNextBtnCommand}"/>
+
+                    </Grid>
+                  
+                </VerticalStackLayout>
+
+            </Border>
+
+
+        </Grid>
+    </VerticalStackLayout>
+</ContentView>
