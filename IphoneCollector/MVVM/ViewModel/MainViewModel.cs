@@ -7,6 +7,9 @@ using IphoneCollector.MVVM.View;
 using IphoneCollector.Services;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography;
+using System.Text;
 using System.Windows.Input;
 using static IphoneCollector.MVVM.Model.ConnectedDevice;
 
@@ -21,6 +24,7 @@ namespace IphoneCollector.MVVM.ViewModel
 
         private readonly LocalDbService _dbServices;
 
+        public string OSProfile { get; set; }
 
         private ConnectedDevice _connectedDevice;
         public ConnectedDevice ConnectedDevice
@@ -167,6 +171,7 @@ namespace IphoneCollector.MVVM.ViewModel
             {
                 _storageLocation = value;
                 OnPropertyChanged();
+                DataTransferredTo = _storageLocation;
             }
         }
 
@@ -371,7 +376,7 @@ namespace IphoneCollector.MVVM.ViewModel
         public double ProgressValue => ProgressPercent / 100.0;
 
 
-        private string _hardDriveInventory = "MacBookPro18,2(2TB), External SSD";
+        private string _hardDriveInventory;
 
         public string HardDriveInventory
         {
@@ -383,7 +388,7 @@ namespace IphoneCollector.MVVM.ViewModel
             }
         }
 
-        private string _hardDrivePreserved = "Yes";
+        private string _hardDrivePreserved;
 
         public string HardDrivePreserved
         {
@@ -395,7 +400,7 @@ namespace IphoneCollector.MVVM.ViewModel
             }
         }
 
-        private string _custodianName = "John Doe";
+        private string _custodianName;
 
         public string CustodianName
         {
@@ -407,7 +412,7 @@ namespace IphoneCollector.MVVM.ViewModel
             }
         }
 
-        private string _custodianEmail = "john.doe@example.com";
+        private string _custodianEmail;
         public string CustodianEmail
         {
             get { return _custodianEmail; }
@@ -440,7 +445,7 @@ namespace IphoneCollector.MVVM.ViewModel
             }
         }
 
-        private string _dataSize = "1.14 TB";
+        private string _dataSize;
         public string DataSize
         {
             get { return _dataSize; }
@@ -451,7 +456,7 @@ namespace IphoneCollector.MVVM.ViewModel
             }
         }
 
-        private string _hash = "#sgdvasvdasfdsa3465";
+        private string _hash;
         public string Hash
         {
             get { return _hash; }
@@ -462,7 +467,7 @@ namespace IphoneCollector.MVVM.ViewModel
             }
         }
 
-        private string _custodianDate = "2024-06-18";
+        private string _custodianDate;
         public string CustodianDate
         {
             get { return _custodianDate; }
@@ -473,7 +478,7 @@ namespace IphoneCollector.MVVM.ViewModel
             }
         }
 
-        private string _dataTransferredTo = "Aws S3(Forensics Backup)";
+        private string _dataTransferredTo;
         public string DataTransferredTo
         {
             get { return _dataTransferredTo; }
@@ -514,6 +519,7 @@ namespace IphoneCollector.MVVM.ViewModel
         {
             _dbServices = dbService;
             DetectAndLoadDevice();
+            LoadSystemInfo();
 
             //ConnectedDevicesList.Add(new ConnectedDevice
             //{
@@ -863,6 +869,46 @@ namespace IphoneCollector.MVVM.ViewModel
         {
 
         }
+
+        private void LoadSystemInfo()
+        {
+            // OS Info
+            OSProfile = RuntimeInformation.OSDescription;
+            CustodianName = $"{Environment.UserDomainName}\\{Environment.UserName}";
+
+            // Drive Info
+            var drives = DriveInfo.GetDrives();
+            var readyDrives = drives.Where(d => d.IsReady && d.DriveType == DriveType.Fixed).ToList();
+
+            // Example: "Macintosh HD (2TB), External SSD (500GB)"
+            HardDriveInventory = string.Join(", ", readyDrives.Select(d =>
+            {
+                string label = string.IsNullOrWhiteSpace(d.VolumeLabel) ? d.Name.TrimEnd('\\') : d.VolumeLabel;
+                string sizeGB = $"{d.TotalSize / (1024L * 1024 * 1024)}GB";
+                return $"{label} ({sizeGB})";
+            }));
+
+            bool preserved = readyDrives.Any(d => d.DriveType == DriveType.Fixed || d.DriveType == DriveType.Network);
+            HardDrivePreserved = preserved ? "Yes" : "Not Preserved";
+
+            // Total size of all preserved drives
+            long totalSizeBytes = readyDrives.Sum(d => d.TotalSize);
+            DataSize = $"{totalSizeBytes / (1024 * 1024 * 1024)} GB";
+
+            // Set a dummy hash (real hash would come from hashing actual files/folders)
+            Hash = GenerateDummyHash();
+
+            CustodianDate = DateTime.Now.ToString("yyyy-MM-dd");
+
+        }
+
+        private string GenerateDummyHash()
+        {
+            using var sha256 = SHA256.Create();
+            var hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(CustodianName + CustodianDate));
+            return BitConverter.ToString(hash).Replace("-", "").Substring(0, 16);
+        }
+
 
     }
     public class SelectedFolder

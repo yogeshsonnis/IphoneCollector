@@ -65,7 +65,7 @@ Padding="16"
                             <ScrollView HeightRequest="500" WidthRequest="500" Margin="0,20,0,0">
                                 <VerticalStackLayout Padding="10" >
 
-                                    <Label Text="Mac Profile" TextColor="#1f3580" FontSize="16" FontAttributes="Bold"/>
+                                    <Label Text="Os Profile" TextColor="#1f3580" FontSize="16" FontAttributes="Bold"/>
 
                                     <Grid ColumnDefinitions="200, *" Margin="5,8,0,0">
                                         <Label Text="Hard Drive Inventory" FontAttributes="Bold" Grid.Column="0"/>
@@ -118,31 +118,6 @@ Padding="16"
                                     <Grid ColumnDefinitions="200, *" Margin="5,10,0,0">
                                         <Label Text="Data Transferred To" FontAttributes="Bold" Grid.Column="0"/>
                                         <Label Text="{Binding DataTransferredTo}" Grid.Column="1" HorizontalOptions="Start"/>
-                                    </Grid>
-
-                                    <Label Text="Disk Imaging" Margin="0,20,0,0" TextColor="#1f3580" FontSize="16" FontAttributes="Bold"/>
-
-                                    <Grid ColumnDefinitions="200, *" Margin="5,10,0,0">
-                                        <Label Text="Collection Mode" FontAttributes="Bold" Grid.Column="0"/>
-                                        <Label Text="Remote Collection" Grid.Column="1" HorizontalOptions="Start"/>
-                                    </Grid>
-
-                                    <Grid ColumnDefinitions="200, *" Margin="5,0,0,0">
-                                        <Label Text="Custodian Type" FontAttributes="Bold" Grid.Column="0"/>
-                                        <Label Text="Full Disk" Grid.Column="1" HorizontalOptions="Start"/>
-                                    </Grid>
-
-                                    <Grid ColumnDefinitions="200, *" Margin="5,0,0,0">
-                                        <Label Text="Data Size" FontAttributes="Bold" Grid.Column="0"/>
-                                        <Label Text="1.14 TB" Grid.Column="1" HorizontalOptions="Start"/>
-                                    </Grid>
-                                    <Grid ColumnDefinitions="200, *" Margin="5,0,0,0">
-                                        <Label Text="Hash" FontAttributes="Bold" Grid.Column="0"/>
-                                        <Label Text="#sgdvasvdasfdsa3465" Grid.Column="1" HorizontalOptions="Start"/>
-                                    </Grid>
-                                    <Grid ColumnDefinitions="200, *" Margin="5,0,0,0">
-                                        <Label Text="Custodian Date" FontAttributes="Bold" Grid.Column="0"/>
-                                        <Label Text="2024-06-18" Grid.Column="1" HorizontalOptions="Start"/>
                                     </Grid>
 
                                     <!-- Repeat more rows with the same Grid structure as needed -->
