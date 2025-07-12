@@ -1,37 +1,37 @@
 name: Build MAUI macOS App
 
 on:
-  workflow_dispatch:  # Manual trigger
+  workflow_dispatch:  # Manual trigger from GitHub UI
 
 jobs:
   build-macos:
     runs-on: macos-latest
 
     steps:
-    - name: Checkout repository
+    - name: 📥 Checkout repository
       uses: actions/checkout@v3
 
-    - name: Setup .NET 9 SDK
+    - name: 🛠 Setup .NET 9 SDK
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '9.0.100-preview.6'
 
-    - name: Install MAUI workload
+    - name: 📦 Install MAUI workload
       run: dotnet workload install maui
 
-    - name: Restore dependencies
-      run: dotnet restore
+    - name: 🔄 Restore NuGet packages
+      run: dotnet restore IphoneCollector.csproj
 
-    - name: Publish .app for Mac Catalyst
+    - name: 🚀 Publish .app for Mac Catalyst
       run: dotnet publish IphoneCollector.csproj -f:net9.0-maccatalyst -c:Release
 
-    - name: Zip .app
+    - name: 📁 Zip the .app bundle
       run: |
         cd bin/Release/net9.0-maccatalyst/osx-x64/publish/
-        zip -r MauiApp.zip *.app
+        zip -r IphoneCollector-macOS.zip *.app
 
-    - name: Upload .app as artifact
+    - name: ☁️ Upload .zip as artifact
       uses: actions/upload-artifact@v4
       with:
-        name: MauiApp-macOS
-        path: bin/Release/net9.0-maccatalyst/osx-x64/publish/MauiApp.zip
+        name: IphoneCollector-macOS
+        path: bin/Release/net9.0-maccatalyst/osx-x64/publish/IphoneCollector-macOS.zip
