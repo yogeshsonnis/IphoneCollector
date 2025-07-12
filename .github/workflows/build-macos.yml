@@ -1,4 +1,4 @@
-name: Build MAUI macOS App
+name: Build MAUI macOS App (.NET 9)
 
 on:
   workflow_dispatch:
@@ -11,28 +11,31 @@ jobs:
     - name: 📥 Checkout repository
       uses: actions/checkout@v3
 
-    - name: 🛠 Setup .NET 8 SDK
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '8.0.x'
+    - name: 🛠 Install .NET 9 Preview SDK manually
+      run: |
+        curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --version 9.0.100-preview.6 --install-dir ~/.dotnet
+        echo "DOTNET_ROOT=$HOME/.dotnet" >> $GITHUB_ENV
+        echo "$HOME/.dotnet" >> $GITHUB_PATH
 
     - name: 📦 Install MAUI workload
       run: |
         dotnet workload install maui --skip-sign-check
 
     - name: 🔄 Restore dependencies
+      working-directory: IphoneCollector/IphoneCollector
       run: dotnet restore IphoneCollector.csproj
 
     - name: 🚀 Publish .app for Mac Catalyst
-      run: dotnet publish IphoneCollector.csproj -f:net8.0-maccatalyst -c:Release
+      working-directory: IphoneCollector/IphoneCollector
+      run: dotnet publish IphoneCollector.csproj -f:net9.0-maccatalyst -c:Release
 
     - name: 📁 Zip the .app
       run: |
-        cd bin/Release/net8.0-maccatalyst/osx-x64/publish/
+        cd IphoneCollector/IphoneCollector/bin/Release/net9.0-maccatalyst/osx-x64/publish/
         zip -r IphoneCollector-macOS.zip *.app
 
     - name: ☁️ Upload zipped .app
       uses: actions/upload-artifact@v4
       with:
         name: IphoneCollector-macOS
-        path: bin/Release/net8.0-maccatalyst/osx-x64/publish/IphoneCollector-macOS.zip
+        path: IphoneCollector/IphoneCollector/bin/Release/net9.0-maccatalyst/osx-x64/publish/IphoneCollector-macOS.zip
