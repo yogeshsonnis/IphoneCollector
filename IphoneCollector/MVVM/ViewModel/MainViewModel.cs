@@ -489,6 +489,19 @@ namespace IphoneCollector.MVVM.ViewModel
             }
         }
 
+        private bool _backupSuccess;
+
+        public bool BackupSuccess
+        {
+            get { return _backupSuccess; }
+            set
+            {
+                _backupSuccess = value;
+                OnPropertyChanged();
+            }
+        }
+
+
 
         #endregion
 
@@ -616,14 +629,14 @@ namespace IphoneCollector.MVVM.ViewModel
                     ProgressPercent = info.Percent / 1000.0;
                 });
 
-                bool backupSuccess = await _iosService.TriggerBackupAsync(
-                    ConnectedDevice.DeviceName,
-                    progress,
-                    EncryptionPassword,
-                    StorageLocation);
+                BackupSuccess = await _iosService.TriggerBackupAsync(
+                   ConnectedDevice.DeviceName,
+                   progress,
+                   EncryptionPassword,
+                   StorageLocation);
 
 
-                if (!backupSuccess)
+                if (!BackupSuccess)
                 {
                     Debug.WriteLine("❌ IPhone Backup failed. Upload aborted.");
                     return;
@@ -631,7 +644,7 @@ namespace IphoneCollector.MVVM.ViewModel
                 App.Current.MainPage.DisplayAlert("Success", "IPhone Backup completed.", "OK");
                 Debug.WriteLine("✅ IPhone Backup completed. Starting upload...");
 
-                //await _iosService.UploadToAllPlatforms();
+                // await _iosService.UploadToAllPlatforms();
                 // Debug.WriteLine("✅ Upload finished.");
             }
             catch (Exception ex)
@@ -865,9 +878,16 @@ namespace IphoneCollector.MVVM.ViewModel
 
         }
 
-        private void ExecuteStartUploadCommand()
+        private async void ExecuteStartUploadCommand()
         {
+            if (!BackupSuccess)
+            {
 
+                await _iosService.UploadToAllPlatformsAsync(uploadToGCP: IsGoogleCloudSelected, uploadToAWS: IsAwsS3Selected, uploadToAzure: IsAzureSelected, uploadToUSB: IsUSBConnected);
+                await App.Current.MainPage.DisplayAlert("", "Upload finished.", "OK");
+                Debug.WriteLine("✅ Upload finished.");
+
+            }
         }
 
         private void LoadSystemInfo()

@@ -8,6 +8,6 @@ namespace IphoneCollector.Services
 {
     public interface IBackupUploader
     {
-        Task UploadAsync(string localBackupPath);
+        Task UploadAsync(string zipFilePath); // Instead of folder path
     }
 }

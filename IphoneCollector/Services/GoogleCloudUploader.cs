@@ -1,4 +1,5 @@
-﻿using Google.Cloud.Storage.V1;
+﻿using Google.Apis.Auth.OAuth2;
+using Google.Cloud.Storage.V1;
 
 namespace IphoneCollector.Services
 {
@@ -12,35 +13,32 @@ namespace IphoneCollector.Services
             _bucketName = bucketName;
 
             // Use the JSON file to authenticate
-            var credentials = Google.Apis.Auth.OAuth2.GoogleCredential.FromFile(serviceAccountJsonPath);
+            var credentials = GoogleCredential.FromFile(serviceAccountJsonPath);
             _storageClient = StorageClient.Create(credentials);
         }
 
-        public async Task UploadAsync(string localBackupPath)
+        public async Task UploadAsync(string localZipPath)
         {
-            if (!Directory.Exists(localBackupPath))
+            if (!File.Exists(localZipPath))
             {
-                Console.WriteLine("Backup folder does not exist.");
+                Console.WriteLine("❌ ZIP file not found.");
                 return;
             }
 
-            var files = Directory.GetFiles(localBackupPath, "*.*", SearchOption.AllDirectories);
-            foreach (var filePath in files)
-            {
-                var relativePath = Path.GetRelativePath(localBackupPath, filePath).Replace("\\", "/");
-                using var fileStream = File.OpenRead(filePath);
+            var fileName = Path.GetFileName(localZipPath);
 
-                Console.WriteLine($"Uploading: {relativePath}");
+            using var fileStream = File.OpenRead(localZipPath);
 
-                await _storageClient.UploadObjectAsync(
-                    bucket: _bucketName,
-                    objectName: relativePath,
-                    contentType: "application/octet-stream",
-                    source: fileStream
-                );
-            }
+            Console.WriteLine($"📤 Uploading ZIP to GCS: {fileName}");
 
-            Console.WriteLine("✅ Google Cloud upload complete.");
+            await _storageClient.UploadObjectAsync(
+                bucket: _bucketName,
+                objectName: $"iPhoneBackups/{DateTime.Now:yyyyMMdd_HHmmss}/{fileName}",
+                contentType: "application/zip",
+                source: fileStream
+            );
+
+            Console.WriteLine("✅ GCS upload complete.");
         }
     }
 }

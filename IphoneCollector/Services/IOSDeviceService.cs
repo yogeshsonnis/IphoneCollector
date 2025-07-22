@@ -12,6 +12,7 @@ using System.Diagnostics;
 using static IphoneCollector.MVVM.Model.ConnectedDevice;
 using IphoneCollector.Helper;
 using System.Text.RegularExpressions;
+using System.IO.Compression;
 
 namespace IphoneCollector.Services
 {
@@ -552,49 +553,79 @@ namespace IphoneCollector.Services
         }
 
 
-        public async Task UploadToAllPlatforms()
+        public async Task UploadToAllPlatformsAsync(bool uploadToGCP, bool uploadToAWS, bool uploadToAzure, bool uploadToUSB)
         {
-            string localBackupPath = $"backup \"{_backupOutputPath}\"";
-            string bucketName = "your-gcs-bucket";
-            string gcpJsonKeyPath = @"C:\Secrets\your-service-account.json";
+            string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+            string localBackupFolder = _backupOutputPath;
+            string zipFileName = $"iPhoneBackup_{timestamp}.zip";
+            string zipFilePath = Path.Combine(Path.GetTempPath(), zipFileName);
 
-            var uploaders = new List<IBackupUploader>
+            // 1. Zip the backup
+            if (File.Exists(zipFilePath))
+                File.Delete(zipFilePath);
+
+            ZipFile.CreateFromDirectory(localBackupFolder, zipFilePath, CompressionLevel.Optimal, includeBaseDirectory: false);
+
+            var uploaders = new List<IBackupUploader>();
+
+            if (uploadToGCP)
             {
-                //new GoogleCloudUploader(bucketName, gcpJsonKeyPath)
-            };
-
-            string? usbPath = UsbHelper.GetFirstUsbDrive();
-
-            if (!string.IsNullOrEmpty(usbPath))
-            {
-                uploaders.Add(new UsbUploader(usbPath));
+                string gcpJsonPath = @"C:\Secrets\your-service-account.json";
+                string bucket = "your-bucket";
+                uploaders.Add(new GoogleCloudUploader(bucket, gcpJsonPath));
             }
-            else
+
+            if (uploadToAWS)
             {
-                Console.WriteLine("⚠️ No USB drive detected. Skipping USB upload.");
+                string awsAccessKey = "your-access-key";
+                string awsSecretKey = "your-secret-key";
+                string region = "us-east-1";
+                string bucketName = "your-aws-bucket";
+
+                var awsUploader = new AwsUploader(awsAccessKey, awsSecretKey, region, bucketName);
+                uploaders.Add(awsUploader);
             }
-            //var uploaders = new List<IBackupUploader>
-            //{
-            //    new GoogleCloudUploader(bucketName, gcpJsonKeyPath),
-            //    new UsbUploader(usbPath),
 
-            //    // new AwsUploader(...), // ← Future expansion
-            //    // new AzureUploader(...),
-            //    // new UsbUploader(...),
-            //};
+            // 📦 Azure Blob
+            if (uploadToAzure)
+            {
+                string azureConnectionString = "your-azure-connection-string";
+                string containerName = "your-container-name";
 
+                var azureUploader = new AzureUploader(azureConnectionString, containerName);
+                uploaders.Add(azureUploader);
+            }
+
+            // 💾 USB Drive
+            if (uploadToUSB)
+            {
+                string? usbPath = UsbHelper.GetFirstUsbDrive();
+                if (!string.IsNullOrEmpty(usbPath))
+                {
+                    uploaders.Add(new UsbUploader(usbPath));
+                }
+                else
+                {
+                    Console.WriteLine("⚠️ No USB drive detected.");
+                }
+            }
+
+            // 🚀 Upload to All Enabled Platforms
             foreach (var uploader in uploaders)
             {
                 try
                 {
-                    await uploader.UploadAsync(localBackupPath);
+                    await uploader.UploadAsync(zipFilePath);
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"❌ Upload failed: {ex.Message}");
+                    Console.WriteLine($"❌ Upload failed: {ex.Message}");
                 }
             }
+
+            Console.WriteLine("✅ All uploads complete.");
         }
+
 
 
     }

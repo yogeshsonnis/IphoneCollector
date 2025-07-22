@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace IphoneCollector.Services
@@ -18,36 +16,28 @@ namespace IphoneCollector.Services
             _usbDrivePath = usbDrivePath;
         }
 
-        public async Task UploadAsync(string localBackupPath)
+        public async Task UploadAsync(string localBackupZipPath)
         {
-            if (!Directory.Exists(localBackupPath))
+            if (!File.Exists(localBackupZipPath))
             {
-                Console.WriteLine("Backup folder does not exist.");
+                Console.WriteLine("❌ Backup ZIP file does not exist.");
                 return;
             }
 
-            var destinationPath = Path.Combine(_usbDrivePath, "iPhoneBackups", DateTime.Now.ToString("yyyyMMdd_HHmmss"));
-            Directory.CreateDirectory(destinationPath);
+            string timestampFolder = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+            string destinationDir = Path.Combine(_usbDrivePath, "iPhoneBackups", timestampFolder);
+            Directory.CreateDirectory(destinationDir);
 
-            Console.WriteLine($"Copying to USB: {destinationPath}");
+            string destFile = Path.Combine(destinationDir, Path.GetFileName(localBackupZipPath));
 
-            await Task.Run(() => CopyDirectory(localBackupPath, destinationPath));
+            Console.WriteLine($"📁 Copying ZIP to USB: {destFile}");
 
-            Console.WriteLine("✅ USB upload (copy) complete.");
-        }
-
-        private void CopyDirectory(string sourceDir, string destinationDir)
-        {
-            foreach (var dir in Directory.GetDirectories(sourceDir, "*", SearchOption.AllDirectories))
+            await Task.Run(() =>
             {
-                Directory.CreateDirectory(dir.Replace(sourceDir, destinationDir));
-            }
+                File.Copy(localBackupZipPath, destFile, overwrite: true);
+            });
 
-            foreach (var file in Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories))
-            {
-                var destFile = file.Replace(sourceDir, destinationDir);
-                File.Copy(file, destFile, overwrite: true);
-            }
+            Console.WriteLine("✅ USB ZIP upload complete.");
         }
     }
 }
