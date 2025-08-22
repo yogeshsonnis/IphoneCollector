@@ -11,8 +11,6 @@ namespace IphoneCollector.Services
         public GoogleCloudUploader(string bucketName, string serviceAccountJsonPath)
         {
             _bucketName = bucketName;
-
-            // Use the JSON file to authenticate
             var credentials = GoogleCredential.FromFile(serviceAccountJsonPath);
             _storageClient = StorageClient.Create(credentials);
         }

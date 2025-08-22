@@ -13,6 +13,7 @@ using static IphoneCollector.MVVM.Model.ConnectedDevice;
 using IphoneCollector.Helper;
 using System.Text.RegularExpressions;
 using System.IO.Compression;
+using IphoneCollector.CloudConfigHelper;
 
 namespace IphoneCollector.Services
 {
@@ -21,6 +22,7 @@ namespace IphoneCollector.Services
         public List<string> ConnectedDeviceNames { get; private set; } = new();
         //private readonly string toolPath = Path.Combine(AppContext.BaseDirectory, "Tools", "idevicebackup2.exe");
         private readonly string toolPath = Path.Combine(AppContext.BaseDirectory, "Tools", "idevice", "idevicebackup2.exe");
+
 
         private readonly string _backupOutputPath = Path.Combine(AppContext.BaseDirectory, "iPhoneBackup", DateTime.Now.ToString("yyyyMMdd_HHmmss"));
 
@@ -553,7 +555,7 @@ namespace IphoneCollector.Services
         }
 
 
-        public async Task UploadToAllPlatformsAsync(bool uploadToGCP, bool uploadToAWS, bool uploadToAzure, bool uploadToUSB)
+        public async Task UploadToAllPlatformsAsync(bool uploadToGCP, bool uploadToAWS, bool uploadToAzure, bool uploadToUSB, bool uploadToNetShare, bool uploadToShareFile)
         {
             string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
             string localBackupFolder = _backupOutputPath;
@@ -566,37 +568,39 @@ namespace IphoneCollector.Services
 
             ZipFile.CreateFromDirectory(localBackupFolder, zipFilePath, CompressionLevel.Optimal, includeBaseDirectory: false);
 
+            // Load from JSON
+            string configPath = Path.Combine(AppContext.BaseDirectory, "cloud-config.json");
+            CloudConfig config = ConfigLoader.Load(configPath);
+
             var uploaders = new List<IBackupUploader>();
 
             if (uploadToGCP)
             {
-                string gcpJsonPath = @"C:\Secrets\your-service-account.json";
-                string bucket = "your-bucket";
-                uploaders.Add(new GoogleCloudUploader(bucket, gcpJsonPath));
+                uploaders.Add(
+                    new GoogleCloudUploader(
+                    config.GoogleCloud.BucketName,
+                    config.GoogleCloud.ServiceAccountJsonPath));
             }
 
             if (uploadToAWS)
             {
-                string awsAccessKey = "your-access-key";
-                string awsSecretKey = "your-secret-key";
-                string region = "us-east-1";
-                string bucketName = "your-aws-bucket";
-
-                var awsUploader = new AwsUploader(awsAccessKey, awsSecretKey, region, bucketName);
-                uploaders.Add(awsUploader);
+                uploaders.Add(new AwsUploader(
+                   config.AwsS3.AccessKey,
+                   config.AwsS3.SecretKey,
+                   config.AwsS3.Region,
+                   config.AwsS3.BucketName));
             }
 
             // 📦 Azure Blob
             if (uploadToAzure)
             {
-                string azureConnectionString = "your-azure-connection-string";
-                string containerName = "your-container-name";
-
-                var azureUploader = new AzureUploader(azureConnectionString, containerName);
-                uploaders.Add(azureUploader);
+                uploaders.Add(
+                    new AzureUploader(
+                        config.AzureBlob.ConnectionString,
+                        config.AzureBlob.ContainerName
+                        ));
             }
 
-            // 💾 USB Drive
             if (uploadToUSB)
             {
                 string? usbPath = UsbHelper.GetFirstUsbDrive();
@@ -608,6 +612,21 @@ namespace IphoneCollector.Services
                 {
                     Console.WriteLine("⚠️ No USB drive detected.");
                 }
+            }
+
+            if (uploadToNetShare)
+            {
+                string? networkPath = "";
+                uploaders.Add(new NetShareUploader(networkPath));
+            }
+
+            if (uploadToShareFile)
+            {
+                string? uploadUrl = "";
+                string? authToken = "";
+
+                uploaders.Add(new ShareFileUploader(uploadUrl, authToken));
+
             }
 
             // 🚀 Upload to All Enabled Platforms
