@@ -11,7 +11,7 @@
 
         <Border BackgroundColor="{StaticResource PrimaryColor}" MinimumHeightRequest="130" StrokeThickness="0">
             <Grid>
-                <Label Text="📱 iPhone Collector" Style="{StaticResource FieldLabel}" HorizontalOptions="CenterAndExpand"  FontSize="Large"  FontAttributes="Bold" VerticalOptions="Center" FontFamily="Roboto" TextColor="{StaticResource White}"/>
+                <Label Text="📱 iPhone Collector"    Style="{StaticResource FieldLabel}" HorizontalOptions="CenterAndExpand"  FontSize="Large"  FontAttributes="Bold" VerticalOptions="Center" FontFamily="Roboto" TextColor="{StaticResource White}"/>
                 <StackLayout HorizontalOptions="EndAndExpand">
                     <StackLayout.Style>
                         <Style TargetType="StackLayout">
