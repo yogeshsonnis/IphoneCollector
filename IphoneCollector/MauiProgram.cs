@@ -20,7 +20,7 @@ namespace IphoneCollector
                 });
 
             builder.Services.AddSingleton<LocalDbService>();
-            builder.Services.AddSingleton<MainViewModel>();
+            builder.Services.AddSingleton<MainViewModelVM>();
             builder.Services.AddTransient<MainPage>();
 #if DEBUG
             builder.Logging.AddDebug();

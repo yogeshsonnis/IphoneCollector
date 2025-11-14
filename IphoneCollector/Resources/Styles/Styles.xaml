@@ -23,7 +23,7 @@
         <Setter Property="Padding" Value="12" />
         <Setter Property="HorizontalOptions" Value="Fill" />
     </Style>
-
+  
     <!-- 📦 Panel Container -->
     <Style x:Key="PanelContainer" TargetType="StackLayout">
         <Setter Property="Padding" Value="24" />
@@ -78,7 +78,7 @@
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray950}, Dark={StaticResource Gray200}}" />
     </Style>
 
-    <Style TargetType="Button">
+    <!--<Style TargetType="Button">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource PrimaryDarkText}}" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
         <Setter Property="FontFamily" Value="OpenSansRegular"/>
@@ -102,9 +102,212 @@
                 </VisualStateGroup>
             </VisualStateGroupList>
         </Setter>
+    </Style>-->
+    <Style x:Key="BtnStyle3" TargetType="Button">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HeightRequest" Value="35"/>
+        <Setter Property="WidthRequest" Value="77.5"/>
+        <Setter Property="CornerRadius" Value="5"/>
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <!-- Common states -->
+                <VisualStateGroup Name="CommonStates">
+                    <VisualState Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="#8b8b8b"/>
+                            <Setter Property="TextColor" Value="White"/>
+                        </VisualState.Setters>
+                    </VisualState>
+
+                    <VisualState Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="#145b94"/>
+                            <Setter Property="TextColor" Value="White"/>
+                        </VisualState.Setters>
+                    </VisualState>
+
+                    <VisualState Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="#0f3e6b"/>
+                            <Setter Property="TextColor" Value="White"/>
+                        </VisualState.Setters>
+                    </VisualState>
+
+                    <VisualState Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="#d3d3d3"/>
+                            <Setter Property="TextColor" Value="#a1a1a1"/>
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+    <Style TargetType="Button" x:Key="NotesBtn">
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="FontSize" Value="12.5"/>
+        <Setter Property="CornerRadius" Value="2"/>
+        <Setter Property="Background" Value="#F0F0F0"/>
+        <Setter Property="HeightRequest" Value="23.5"/>
+        <Setter Property="WidthRequest" Value="59"/>
+        <Setter Property="BorderColor" Value="Black"/>
+        <Setter Property="BorderWidth" Value="1"/>
+    </Style>
+    
+    <Style x:Key="BtnStyle1" TargetType="Button">
+    <Setter Property="BackgroundColor" Value="#e4e9ea"/>
+    <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HeightRequest" Value="35"/>
+        <Setter Property="WidthRequest" Value="152.33"/>
+        <Setter Property="CornerRadius" Value="5"/>
+    <Setter Property="Padding" Value="10,5"/>
+    <Setter Property="VisualStateManager.VisualStateGroups">
+        <VisualStateGroupList>
+            <VisualStateGroup x:Name="CommonStates">
+                <!-- Normal state -->
+                <VisualState x:Name="Normal">
+                    <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="#1e88e4"/>
+                        <Setter Property="TextColor" Value="White"/>
+                    </VisualState.Setters>
+                </VisualState>
+                    <VisualState Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="#145b94"/>
+                            <Setter Property="TextColor" Value="White"/>
+                        </VisualState.Setters>
+                    </VisualState>
+
+
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="#145b94"/>
+                            <Setter Property="TextColor" Value="White"/>
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+        </VisualStateGroupList>
+    </Setter>
+</Style>
+    <Style x:Key="HeaderLabelStyle" TargetType="Label">
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Background" Value="#f2f2f2"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+    
+
+    <!-- Row Label Style -->
+    <Style x:Key="RowLabelStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="Background" Value="#fbfbfb"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+       
+    </Style>
+    
+    <Style x:Key="RadioButtonAsButtonStyle" TargetType="RadioButton">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="HeightRequest" Value="38"/>
+        <Setter Property="WidthRequest" Value="168"/>
+        <Setter Property="Margin" Value="0,0,5,0"/>
+        <Setter Property="BackgroundColor" Value="#f2f2f2"/>
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="CornerRadius" Value="6"/>
+        <Setter Property="ControlTemplate">
+            <ControlTemplate>
+                <Border x:Name="border" 
+                    Background="{TemplateBinding BackgroundColor}"
+                    Margin="{TemplateBinding Padding}">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="{TemplateBinding CornerRadius}" />
+                    </Border.StrokeShape>
+                    <Label Text="{TemplateBinding Content}"  
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       FontSize="{TemplateBinding FontSize}"    
+                       FontAttributes="{TemplateBinding FontAttributes}"
+                       TextColor="{TemplateBinding TextColor}"/>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style.Triggers>
+            <!-- Trigger when checked -->
+            <Trigger TargetType="RadioButton" Property="IsChecked" Value="True">
+                <Setter Property="BackgroundColor" Value="#1e88e4"/>
+                <Setter Property="TextColor" Value="#FFFFFF"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    
+    <!-- Checkbox Style -->
+    <Style TargetType="CheckBox" x:Key="SimpleCheckBoxStyle">
+        <Setter Property="Color" Value="#1a415a"/>
+        <Setter Property="Margin" Value="5"/>
+        <Setter Property="WidthRequest" Value="13"/>
+        <Setter Property="HeightRequest" Value="13"/>
     </Style>
 
-    <Style TargetType="CheckBox">
+    <!-- Header Grid Style -->
+    <Style x:Key="HeaderGridStyle" TargetType="Grid">
+        <Setter Property="BackgroundColor" Value="#f2f2f2"/>
+        <Setter Property="HeightRequest" Value="38"/>
+        <Setter Property="WidthRequest" Value="942"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <!-- Row Grid Style -->
+    <Style x:Key="RowGridStyle" TargetType="Grid">
+        <Setter Property="HeightRequest" Value="40"/>
+        <Setter Property="Background" Value="#fbfbfb"/>
+    </Style>
+
+    <Style x:Key="BtnStyle2" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="#1e88e4"/>
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HeightRequest" Value="35"/>
+        <Setter Property="WidthRequest" Value="66.39"/>
+        <Setter Property="CornerRadius" Value="5"/>
+        <Setter Property="Padding" Value="10,5"/>
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <!-- Normal state -->
+                    <VisualState x:Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="#1e88e4"/>
+                            <Setter Property="TextColor" Value="White"/>
+                        </VisualState.Setters>
+                    </VisualState>
+ <VisualState Name="PointerOver">
+     <VisualState.Setters>
+         <Setter Property="BackgroundColor" Value="#145b94"/>
+         <Setter Property="TextColor" Value="White"/>
+     </VisualState.Setters>
+ </VisualState>
+                    <!-- Pressed state -->
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="#145b94"/>
+                            <Setter Property="TextColor" Value="White"/>
+                        </VisualState.Setters>
+                    </VisualState>
+
+                    <!-- Disabled state -->
+                    
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <!--<Style TargetType="CheckBox">
         <Setter Property="Color" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
         <Setter Property="MinimumHeightRequest" Value="44"/>
         <Setter Property="MinimumWidthRequest" Value="44"/>
@@ -120,7 +323,7 @@
                 </VisualStateGroup>
             </VisualStateGroupList>
         </Setter>
-    </Style>
+    </Style>-->
 
     <Style TargetType="DatePicker">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />

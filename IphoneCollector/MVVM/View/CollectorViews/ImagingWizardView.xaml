@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="IphoneCollector.MVVM.View.CollectorViews.ImagingWizardView">
+
+        <Grid >
+            <Frame CornerRadius="10" HeightRequest="504" WidthRequest="984" BorderColor="#fefffe">
+                <Grid HeightRequest="465" WidthRequest="944" BackgroundColor="#feffff" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Label Text="Device Imaging Wizard" TextColor="#333" FontSize="22" FontAttributes="Bold" VerticalTextAlignment="Start"  Margin="0,0,0,10"/>
+                    <Border Stroke="Black" ZIndex="1" VerticalOptions="End"  StrokeThickness="0.3" />
+                    <StackLayout Orientation="Vertical" Grid.Row="1" Margin="0,16,0,0">
+                        <Border HeightRequest="82" WidthRequest="462" Background="#fbfafa"  HorizontalOptions="Start">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="6"/>
+                            </Border.StrokeShape>
+                            <StackLayout Orientation="Vertical" VerticalOptions="Center" Spacing="8" Margin="15">
+                                <Label Text="Device Connection Status" FontSize="16" FontAttributes="Bold"/>
+
+                                <HorizontalStackLayout Spacing="8">
+                                    <BoxView WidthRequest="15"  HeightRequest="15"  Color="Red" CornerRadius="50" />
+                                    <Label Text="Not Connected" FontSize="13.4" FontAttributes="Bold"/>
+                                </HorizontalStackLayout>
+                            </StackLayout>
+                        </Border>
+                        <Border HeightRequest="179" WidthRequest="462" Background="#fbfafa"  HorizontalOptions="Start">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="6"/>
+                            </Border.StrokeShape>
+                            <StackLayout Orientation="Vertical" VerticalOptions="Center" Spacing="8" Margin="15">
+                                <Label Text="Device Profile" FontSize="16" FontAttributes="Bold"/>
+                                <HorizontalStackLayout Spacing="5">
+                                    <Label Text="Make iphone:" FontSize="14" FontAttributes="Bold"/>
+                                <Label Text="{Binding ConnectedDevice.DeviceName}" FontSize="14" />
+                                </HorizontalStackLayout>
+                                <HorizontalStackLayout Spacing="5">
+                                    <Label Text="Model:" FontSize="14" FontAttributes="Bold"/>
+                                <Label Text="{Binding ConnectedDevice.DeviceName}" FontSize="14" />
+                                </HorizontalStackLayout>
+                                <HorizontalStackLayout Spacing="5">
+                                    <Label Text="Serial:" FontSize="14" FontAttributes="Bold"/>
+                                <Label Text="{Binding ConnectedDevice.ProductType}" FontSize="14" />
+                                </HorizontalStackLayout>
+                                <HorizontalStackLayout Spacing="5">
+                                    <Label Text="Storage:" FontSize="14" FontAttributes="Bold"/>
+                                    <Label Text="256GB" FontSize="14" />
+                                </HorizontalStackLayout>
+                            </StackLayout>
+
+                        </Border>
+                    </StackLayout>
+                    <Border Grid.Row="1" HorizontalOptions="End" Background="#fbfafa" HeightRequest="179" WidthRequest="462" VerticalOptions="Start" Margin="0,16,0,0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="6"/>
+                        </Border.StrokeShape>
+                        <StackLayout Orientation="Vertical" VerticalOptions="Center" Spacing="8" Margin="15">
+                            <Label Text="Summary" FontSize="16" FontAttributes="Bold"/>
+                            <HorizontalStackLayout Spacing="5">
+                                <Label Text="Case Info:" FontSize="14" FontAttributes="Bold"/>
+                                <Label Text="Case #12345" FontSize="14" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="5">
+                                <Label Text="Custodian Info:" FontSize="14" FontAttributes="Bold"/>
+                                <Label Text="John Doe" FontSize="14" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="5">
+                                <Label Text="Phone Info:" FontSize="14" FontAttributes="Bold"/>
+                                <Label Text="iPhone 13 Pro" FontSize="14" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="5">
+                                <Label Text="Storage Info:" FontSize="14" FontAttributes="Bold"/>
+                                <Label Text="External Drive A" FontSize="14" />
+                            </HorizontalStackLayout>
+                        </StackLayout>
+                    </Border>
+                    <Border Grid.Row="2"  Background="#fbfafa" HeightRequest="76" WidthRequest="883" VerticalOptions="Start" Margin="0,16,0,0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="6"/>
+                        </Border.StrokeShape>
+                        <Grid RowDefinitions="Auto,Auto">
+                            <Label Text="Imaging Progress" FontSize="14" FontAttributes="Bold" Margin="15,8,0,0"/>
+                            <Label Text="Imaging Complete" FontSize="14" FontAttributes="Bold" HorizontalOptions="End" Margin="0,8,15,0"/>
+
+                            <HorizontalStackLayout Spacing="10" Grid.Row="1" Margin="10">
+                            <ProgressBar  x:Name="ImagingProgressBar"  ProgressColor="#1e88e5"  BackgroundColor="#E0E0E0"  WidthRequest="734" MinimumHeightRequest="10"/>
+                            <Button HeightRequest="32" Clicked="OnStartImagingClicked" Text="Start Imaging" TextColor="White" FontSize="13"  WidthRequest="107" Background="#1e88e5"/>
+                            </HorizontalStackLayout>
+
+                        </Grid>
+
+                    </Border>
+                    <Border Stroke="Black" Grid.Row="2" VerticalOptions="End"  StrokeThickness="0.3" Margin="0,0,0,10"/>
+                    <StackLayout Orientation="Horizontal" Grid.Row="3" HorizontalOptions="End"  >
+
+                        <Button Text="cancle" Style="{StaticResource BtnStyle3}"  />
+                        <Button Text="Save" Style="{ StaticResource BtnStyle2}" Margin="13,0,13,0"/>
+                        <Button Text="Next" Style="{ StaticResource BtnStyle1}" WidthRequest="80" Command="{Binding ImagingWizardCommand}"/>
+
+                    </StackLayout>
+                </Grid>
+            </Frame>
+        </Grid>
+  
+</ContentView>

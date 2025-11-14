@@ -5,7 +5,7 @@ namespace IphoneCollector
     public partial class MainPage : ContentPage
     {
 
-        public MainPage(MainViewModel viewModel)
+        public MainPage(MainViewModelVM viewModel)
         {
             InitializeComponent();
             BindingContext = viewModel;

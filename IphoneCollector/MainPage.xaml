@@ -18,8 +18,8 @@
                             <Setter Property="IsVisible" Value="True" />
                             <Style.Triggers>
                                 <DataTrigger TargetType="StackLayout"
-                                    Binding="{Binding IsStartCollectionView}"
-                                    Value="True">
+                                   Binding="{Binding IsStartCollectionView}"
+                                   Value="True">
                                     <Setter Property="IsVisible" Value="False" />
                                 </DataTrigger>
                             </Style.Triggers>
@@ -28,9 +28,9 @@
 
                     <!-- Settings icon with tap gesture -->
                     <Label Text="⚙️"
-                       FontSize="25"
-                       Margin="20"
-                       HorizontalOptions="EndAndExpand">
+                      FontSize="25"
+                      Margin="20"
+                      HorizontalOptions="EndAndExpand">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnSettingsTapped" />
                         </Label.GestureRecognizers>
@@ -38,9 +38,9 @@
 
                     <!-- Hidden Picker that appears on tap -->
                     <Picker x:Name="SettingsPicker" FontAttributes="Bold"  WidthRequest="210" Background="White" SelectedItem="{Binding SelectedSettingOption}"
-                        IsVisible="False"
-                        SelectedIndex="0"
-                        ItemsSource="{Binding SettingsOptions}" Margin="0,0,25,0"/>
+                       IsVisible="False"
+                       SelectedIndex="0"
+                       ItemsSource="{Binding SettingsOptions}" Margin="0,0,25,0"/>
                 </StackLayout>
 
 

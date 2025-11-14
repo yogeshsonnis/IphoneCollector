@@ -1,18 +1,22 @@
-namespace IphoneCollector.MVVM.View;
+using IphoneCollector.MVVM.ViewModel;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 
-public partial class NewCollectionView : ContentView
+namespace IphoneCollector.MVVM.View.CollectorViews;
+
+public partial class CollectionWizardView : ContentView
 {
-	public NewCollectionView()
-	{
-		InitializeComponent();
-		this.Loaded += NewCollectionViewLoaded;
-	}
-
-    private void NewCollectionViewLoaded(object? sender, EventArgs e)
+   
+    public CollectionWizardView()
     {
-        Radiobtn1.IsChecked = true;
-    }
+        InitializeComponent();
 
+       
+    }
+   
+    
+
+   
     private void RadioButton_Changed(object sender, CheckedChangedEventArgs e)
     {
         var radio = sender as RadioButton;
@@ -30,5 +34,10 @@ public partial class NewCollectionView : ContentView
                 Grid4.IsVisible = true;
             }
         }
+    }
+
+    private async void OnSaveAddClicked(object sender, EventArgs e)
+    {
+        await Application.Current.MainPage.DisplayAlert("This Page Says ", "Custodian and iphone model are required", "OK");
     }
 }

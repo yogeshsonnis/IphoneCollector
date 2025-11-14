@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="IphoneCollector.MVVM.View.CollectionViewUC.AwsGovCloudView">
+    <StackLayout Orientation="Vertical" Spacing="10" Margin="18" >
+        <Label Text="AWS FedRAMP" FontSize="16" FontAttributes="Bold" HeightRequest="50" VerticalTextAlignment="Center" />
+        <Entry  WidthRequest="551" Placeholder="Access Key ID" PlaceholderColor="#757574"/>
+        <Entry  WidthRequest="551" Placeholder="Secret Acces Key" PlaceholderColor="#757574"/>
+        <Entry  WidthRequest="551" Placeholder="Bucket Name" PlaceholderColor="#757574"/>
+        <Entry  WidthRequest="551" Placeholder="Region" PlaceholderColor="#757574"/>
+        <Entry  WidthRequest="551" Placeholder="Folder Path (Optional)" PlaceholderColor="#757574"/>
+        <Entry  WidthRequest="551" Placeholder="Encrption (Optional)" PlaceholderColor="#757574"/>
+        <Entry  WidthRequest="551" Placeholder="Permission Validation" PlaceholderColor="#757574"/>
+        <Button WidthRequest="121.5" HeightRequest="28" Background="#4daf50" Text="Test Connection" TextColor="White" HorizontalOptions="Start" />
+        <Entry  WidthRequest="551" Placeholder="Save Lable To Address Book" PlaceholderColor="#757574"/>
+        <Button HeightRequest="30" WidthRequest="62" Style="{StaticResource NotesBtn}" Background="#efefee" Text="Save" TextColor="Black"  HorizontalOptions="Start" FontSize="14"/>
+    </StackLayout>
+</ContentView>

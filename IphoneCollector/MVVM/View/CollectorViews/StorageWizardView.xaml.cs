@@ -1,18 +1,11 @@
-namespace IphoneCollector.MVVM.View;
+namespace IphoneCollector.MVVM.View.CollectorViews;
 
-public partial class StorageOptionsView : ContentView
+public partial class StorageWizardView : ContentView
 {
-	public StorageOptionsView()
+	public StorageWizardView()
 	{
 		InitializeComponent();
-        this.Loaded += StorageOptionsViewLoaded;
-    }
-
-    private void StorageOptionsViewLoaded(object? sender, EventArgs e)
-    {
-        Radiobtn2.IsChecked = true;
-    }
-
+	}
     private void RadioButton_StgWizardChanged(object sender, CheckedChangedEventArgs e)
     {
         var radio = sender as RadioButton;

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="IphoneCollector.MVVM.View.CollectorViews.CastPageView">
+   
+        <Grid Padding="10" >
+            <Frame CornerRadius="10" HeightRequest="504" WidthRequest="984" BorderColor="#fefffe"
+>
+                <Grid HeightRequest="462" WidthRequest="942" BackgroundColor="#feffff" VerticalOptions="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Label Text="Cast Page" TextColor="#333" FontSize="22" FontAttributes="Bold" VerticalTextAlignment="End"  Padding="8"/>
+                    <Border Stroke="Black" ZIndex="1" VerticalOptions="End"  StrokeThickness="0.3" />
+
+                    <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="Start" VerticalOptions="Center" Grid.Row="1" Margin="0,16,0,0">
+
+                        <RadioButton x:Name="Radiobtn3" Content="iPhone Collections" CheckedChanged="RadioButton_CheckedChanged" GroupName="RadioButtonGroup" ZIndex="0" Style="{StaticResource RadioButtonAsButtonStyle}"/>
+
+                        <RadioButton Content="Status Details" GroupName="RadioButtonGroup" CheckedChanged="RadioButton_CheckedChanged" WidthRequest="135" ZIndex="0"  Style="{StaticResource RadioButtonAsButtonStyle}" />
+
+                    </StackLayout>
+
+
+
+                    <Border Stroke="Black" VerticalOptions="End" Grid.Row="1" StrokeThickness="0.3" />
+
+                    <Border Grid.Row="2" StrokeThickness="0.2" Stroke="Black" Margin="0,16,0,15">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="6"/>
+                        </Border.StrokeShape>
+                        <Grid Grid.Row="2" x:Name="Grid1" IsVisible="True">
+                            <StackLayout  Spacing="0"   HeightRequest="260" WidthRequest="942" VerticalOptions="Start">
+                                <Grid ColumnDefinitions="Auto,*,*,*,*,*" Style="{StaticResource HeaderGridStyle}" Grid.Row="0">
+
+                                    <CheckBox MinimumWidthRequest="63"  Style="{StaticResource SimpleCheckBoxStyle}" IsChecked="{Binding IsAllSelected}" />
+
+                                    <Border  StrokeThickness="0.5"   VerticalOptions="StartAndExpand"/>
+                                    <Border Grid.Column="0" StrokeThickness="0.5"  HorizontalOptions="End"/>
+
+                                    <Label Text="FirstName" Style="{StaticResource HeaderLabelStyle}" Grid.Column="1"/>
+                                    <Border  StrokeThickness="0.5" Grid.Column="1"  VerticalOptions="StartAndExpand"/>
+                                    <Border Grid.Column="1" StrokeThickness="0.5"  HorizontalOptions="End"/>
+
+                                    <Label Text="LastName" Style="{StaticResource HeaderLabelStyle}" Grid.Column="2"/>
+                                    <Border Grid.Column="2" StrokeThickness="0.5"  HorizontalOptions="End"/>
+                                    <Border  StrokeThickness="0.5" Grid.Column="2"  VerticalOptions="StartAndExpand"/>
+
+                                    <Label Text="Task Details" Style="{StaticResource HeaderLabelStyle}" Grid.Column="3"/>
+                                    <Border Grid.Column="3" StrokeThickness="0.5"  HorizontalOptions="End"/>
+                                    <Border  StrokeThickness="0.5" Grid.Column="3"  VerticalOptions="StartAndExpand"/>
+
+                                    <Label Text="Start Date" Style="{StaticResource HeaderLabelStyle}" Grid.Column="4"/>
+                                    <Border Grid.Column="4" StrokeThickness="0.5"  HorizontalOptions="End"/>
+                                    <Border  StrokeThickness="0.5" Grid.Column="4"  VerticalOptions="StartAndExpand"/>
+
+                                    <Label Text="End Date" Style="{StaticResource HeaderLabelStyle}" Grid.Column="5"/>
+                                    <Border Grid.Column="5" StrokeThickness="0.5"  HorizontalOptions="End"/>
+                                    <Border  StrokeThickness="0.5" Grid.Column="5"  VerticalOptions="StartAndExpand"/>
+
+                                </Grid>
+
+
+                                <CollectionView x:Name="CollectorCollectionView"  ItemsSource="{Binding Collector}"  SelectionMode="None"  VerticalScrollBarVisibility="Always"  VerticalOptions="StartAndExpand">
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+
+                                            <Grid ColumnDefinitions="Auto,*,*,*,*,*"  Style="{StaticResource RowGridStyle}">
+
+                                                <Border Grid.Column="0" StrokeThickness="0.5"  VerticalOptions="End"/>
+                                                <Border StrokeThickness="0.5" Grid.Column="0"  HorizontalOptions="End"/>
+
+                                                <CheckBox MinimumWidthRequest="63" Style="{StaticResource SimpleCheckBoxStyle}" IsChecked="{Binding IsSelected}"/>
+
+
+                                                <Label Text="{Binding Custodian}" Grid.Column="1" Style="{StaticResource RowLabelStyle}"/>
+                                                <Border Grid.Column="1" StrokeThickness="0.5"  VerticalOptions="End"/>
+                                                <Border StrokeThickness="0.5" Grid.Column="1" HorizontalOptions="End"/>
+
+                                                <Label Text="{Binding PhoneNumber}" Grid.Column="2" Style="{StaticResource RowLabelStyle}"/>
+                                                <Border Grid.Column="2" StrokeThickness="0.5"  VerticalOptions="End"/>
+                                                <Border StrokeThickness="0.5" Grid.Column="2" HorizontalOptions="End"/>
+
+                                                <Label Text="{Binding iPhoneModel}" Grid.Column="3" Style="{StaticResource RowLabelStyle}"/>
+                                                <Border Grid.Column="3" StrokeThickness="0.5"  VerticalOptions="End"/>
+                                                <Border Grid.Column="3" StrokeThickness="0.5"  HorizontalOptions="End"/>
+
+                                                <Label Text="{Binding SavedTo}" Grid.Column="4" Style="{StaticResource RowLabelStyle}"/>
+                                                <Border Grid.Column="4" StrokeThickness="0.5"  VerticalOptions="End"/>
+                                                <Border Grid.Column="4" StrokeThickness="0.5"  HorizontalOptions="End"/>
+
+                                                <Button Text="{Binding Action}" Grid.Column="5" Style="{StaticResource NotesBtn}"/>
+                                                <Border Grid.Column="5" StrokeThickness="0.5"  VerticalOptions="End"/>
+                                                <Border Grid.Column="5" StrokeThickness="0.5"  HorizontalOptions="End"/>
+
+
+                                            </Grid>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+
+                            </StackLayout>
+
+                        </Grid>
+                    </Border>
+                    <Grid Grid.Row="2" x:Name="Grid2" RowDefinitions="Auto,Auto" IsVisible="False">
+                        <Label Text="Status Details" TextColor="Black" FontSize="16" FontAttributes="Bold" Margin="0,22,0,50"/>
+                        <Label Text="Select a collection or job to view detailed status here." TextColor="Black" FontSize="16" Grid.Row="1"/>
+                    </Grid>
+                    <StackLayout Orientation="Horizontal" Grid.Row="3" HorizontalOptions="End"  >
+                        <Button Text="cancle" Style="{StaticResource BtnStyle3}"  />
+                        <Button Text="Save" Style="{ StaticResource BtnStyle2}" Margin="13,0,13,0"/>
+                        <Button Text="Add New Collection" Style="{ StaticResource BtnStyle1}" Command="{Binding CastPageCommand}"/>
+
+                    </StackLayout>
+
+
+
+                </Grid>
+            </Frame>
+
+
+        </Grid>
+
+</ContentView>

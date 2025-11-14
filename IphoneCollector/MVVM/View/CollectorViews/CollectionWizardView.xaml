@@ -1,89 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:helper="clr-namespace:IphoneCollector.Helper"
-             x:Class="IphoneCollector.MVVM.View.NewCollectionView">
-    <VerticalStackLayout  VerticalOptions="Center">
-        <!--<Grid Padding="10">
-         <Grid.RowDefinitions>
-             <RowDefinition Height="Auto"/>
-             <RowDefinition Height="*"/>
-         </Grid.RowDefinitions>
-
-         <Border StrokeThickness="0"  Background="#000000"  HorizontalOptions="Center" Margin="0,10,0,0">
-             <Border.StrokeShape>
-                 <RoundRectangle CornerRadius="12"/>
-             </Border.StrokeShape>
-             <FlexLayout 
-                Direction="Row"
-                Padding="5"
-                HorizontalOptions="Center" 
-                JustifyContent="Start"
-                VerticalOptions="CenterAndExpand"
-                AlignItems="Start">
-                 <Label Text="1. New Collection"   Style="{StaticResource MenuBarLabel}"/>
-                 <Label Text="2. Device Credentials"  Style="{StaticResource MenuBarLabel}"/>
-                 <Label Text="3. Storage Options"  Style="{StaticResource MenuBarLabel}"/>
-                 <Label Text="4. Start Collection"  Style="{StaticResource MenuBarLabel}"/>
-                 <Label Text="5. Cloud Upload"  Style="{StaticResource MenuBarLabel}"/>
-             </FlexLayout>
-         </Border>
-         <Border 
-              Grid.Row="1"
-              Background="{StaticResource White}"
-              StrokeThickness="0"
-              Margin="0,10,0,0"
-              HorizontalOptions="Center"
-              Padding="16"
-              MinimumHeightRequest="300"
-              MaximumWidthRequest="810">
-             <Border.StrokeShape>
-                 <RoundRectangle CornerRadius="12"/>
-             </Border.StrokeShape>
-             <Border.Shadow>
-                 <Shadow Brush="#0D000000" Offset="0,2" Radius="8" Opacity="1"/>
-             </Border.Shadow>
-             <FlexLayout 
-              Direction="Row"
-              HorizontalOptions="Center" 
-              JustifyContent="Start"
-              VerticalOptions="Start"
-              AlignItems="Start">
-                 <VerticalStackLayout  Margin="0,10,0,0" >
-                     <Label Text="🗂️ New Collection Setup"  FontAttributes="Bold" MinimumWidthRequest="150"  LineBreakMode="WordWrap" TextColor="#202124" FontFamily="Roboto" FontSize="23" HorizontalTextAlignment="Justify"/>
-                     <FlexLayout Direction="Row" Margin="0,10,0,0"  
-                                 Wrap="Wrap"
-                                 JustifyContent="Start" 
-                                 VerticalOptions="Start"  
-                                 AlignItems="Start">
-                         <VerticalStackLayout FlexLayout.Basis="50%" Margin="5,0,5,0">
-                             <Label Text="Case Name"/>
-                             <Entry Style="{StaticResource InputField}" Text="{Binding CaseName}"/>
-                         </VerticalStackLayout>
-                         <VerticalStackLayout FlexLayout.Basis="50%" Margin="5,0,5,0">
-                             <Label Text="Examiner Name"/>
-                             <Entry  Style="{StaticResource InputField}" Text="{Binding ExaminerName}"/>
-                         </VerticalStackLayout>
-                         <VerticalStackLayout FlexLayout.Basis="50%" Margin="5,0,5,0">
-                             <Label Text="Matter Number"/>
-                             <Entry  Style="{StaticResource InputField}" Text="{Binding MatterNumber}"/>
-                         </VerticalStackLayout>
-                         <VerticalStackLayout FlexLayout.Basis="50%" Margin="5,0,5,0">
-                             <Label Text="Storage Location"/>
-                             <Entry  Style="{StaticResource InputField}" Text="{Binding StorageLocation}"/>
-                         </VerticalStackLayout>
-                     </FlexLayout>
-                  
-                     <Button Text="Next" WidthRequest="100" HorizontalOptions="End"  Margin="0,10,0,0" Command="{Binding NewCollectionNextBtnCommand}"/>
-
-                 </VerticalStackLayout>
-             </FlexLayout>
-
-         </Border>
-
-
-     </Grid>-->
-
+             x:Class="IphoneCollector.MVVM.View.CollectorViews.CollectionWizardView">
+   
         <Grid IsVisible="Visible">
             <Frame CornerRadius="10" HeightRequest="504" WidthRequest="984" BorderColor="#fefffe" >
                 <Grid HeightRequest="465" WidthRequest="944" BackgroundColor="#feffff" >
@@ -98,7 +17,7 @@
 
                     <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="Start" VerticalOptions="Center" Grid.Row="1" Margin="0,15,0,0">
 
-                        <RadioButton x:Name="Radiobtn1" FontSize="14" Content="Add Device"  WidthRequest="104.39" CheckedChanged="RadioButton_Changed"  GroupName="RadioButtonGroup" ZIndex="0" Style="{StaticResource RadioButtonAsButtonStyle}"/>
+                        <RadioButton FontSize="14" Content="Add Device"  WidthRequest="104.39" CheckedChanged="RadioButton_Changed"  GroupName="RadioButtonGroup" ZIndex="0" Style="{StaticResource RadioButtonAsButtonStyle}"/>
 
                         <RadioButton Content="Phone List"  FontSize="14" GroupName="RadioButtonGroup"  CheckedChanged="RadioButton_Changed" WidthRequest="104" ZIndex="0"  Style="{StaticResource RadioButtonAsButtonStyle}" />
 
@@ -107,12 +26,12 @@
                     <Border Stroke="#1f88e5" VerticalOptions="End" Grid.Row="1" StrokeThickness="1" />
                     <Border Grid.Row="2" x:Name="Grid3" StrokeThickness="0.2" Stroke="Black" Margin="0,16,0,15" HeightRequest="290" VerticalOptions="Start" IsVisible="True">
                         <StackLayout Orientation="Vertical" HorizontalOptions="Start"  Margin="10" Spacing="5">
-                            <Entry  WidthRequest="375.19"  Placeholder="Custodian Name" Text="{Binding CustodianName}" PlaceholderColor="#757574" MinimumHeightRequest="35" FontSize="16" />
-                            <Entry  WidthRequest="375.19"  Placeholder="iPhone Model" Text="{Binding IphoneModel}" PlaceholderColor="#757574" MinimumHeightRequest="35" FontSize="16"/>
-                            <Entry  WidthRequest="375.19"  Placeholder="Phone Number" Text="{Binding PhoneNumber}" PlaceholderColor="#757574" MinimumHeightRequest="35" FontSize="16"/>
-                            <Entry  WidthRequest="375.19"  Placeholder="Email" Text="{Binding Email}" MinimumHeightRequest="35" PlaceholderColor="#757574" FontSize="16"/>
-                            <Entry  WidthRequest="375.19"  Placeholder="Notes" Text="{Binding Notes}" MinimumHeightRequest="70" PlaceholderColor="#757574" VerticalTextAlignment="Start" FontSize="16"/>
-                            <Button WidthRequest="92" BackgroundColor="#e0e0e0"  BorderColor="Black"  Text="Save &amp; Add" FontSize="13" Command="{Binding SaveAddDeviceCommand}" HorizontalOptions="Start"/>
+                            <Entry  WidthRequest="375.19"  Placeholder="Custodian Name" PlaceholderColor="#757574" MinimumHeightRequest="35" FontSize="16" />
+                            <Entry  WidthRequest="375.19"  Placeholder="iPhone Model" PlaceholderColor="#757574" MinimumHeightRequest="35" FontSize="16"/>
+                            <Entry  WidthRequest="375.19"  Placeholder="Phone Number" PlaceholderColor="#757574" MinimumHeightRequest="35" FontSize="16"/>
+                            <Entry  WidthRequest="375.19"  Placeholder="Email" MinimumHeightRequest="35" PlaceholderColor="#757574" FontSize="16"/>
+                            <Entry  WidthRequest="375.19"  Placeholder="Notes" MinimumHeightRequest="70" PlaceholderColor="#757574" VerticalTextAlignment="Start" FontSize="16"/>
+                            <Button WidthRequest="92" BackgroundColor="#e0e0e0"  BorderColor="Black"  Text="Save &amp; Add" FontSize="13" Clicked="OnSaveAddClicked" HorizontalOptions="Start"/> 
                         </StackLayout>
                     </Border>
                     <Border Stroke="Black" Grid.Row="2" VerticalOptions="End"  StrokeThickness="0.3" Margin="0,0,0,10"/>
@@ -120,7 +39,7 @@
 
                         <Button Text="cancle" Style="{StaticResource BtnStyle3}"  />
                         <Button Text="Save" Style="{ StaticResource BtnStyle2}" Margin="13,0,13,0"/>
-                        <Button Text="Next" Style="{ StaticResource BtnStyle1}" WidthRequest="80" Command="{Binding NewCollectionNextBtnCommand}"/>
+                        <Button Text="Next" Style="{ StaticResource BtnStyle1}" WidthRequest="80" Command="{Binding CollectionWizardCommand}"/>
 
                     </StackLayout>
 
@@ -184,9 +103,5 @@
 
             </Frame>
         </Grid>
-
-
-
-
-    </VerticalStackLayout>
+   
 </ContentView>

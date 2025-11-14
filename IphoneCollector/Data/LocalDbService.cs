@@ -47,12 +47,14 @@ namespace IphoneCollector.Data
             try
             {
                 await _connection.CreateTableAsync<Case>();
+                await _connection.CreateTableAsync<DeviceInfo>();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Database initialization failed: {ex.Message}");
             }
         }
+        #region Case
         public async Task CreateCase(Case newCase)
         {
             try
@@ -101,5 +103,59 @@ namespace IphoneCollector.Data
                 Console.WriteLine($"Error deleting case: {ex.Message}");
             }
         }
+
+        #endregion
+
+        #region DeviceInfo
+        public async Task CreateDevice(DeviceInfo newDevice)
+        {
+            try
+            {
+                await _connection.InsertAsync(newDevice);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error inserting Device: {ex.Message}");
+            }
+        }
+
+        public async Task<List<DeviceInfo>> GetDevices()
+        {
+            try
+            {
+                return await _connection.Table<DeviceInfo>().ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving Device: {ex.Message}");
+                return new List<DeviceInfo>();
+            }
+        }
+        public async Task<DeviceInfo> GetDeviceById(int id)
+        {
+            try
+            {
+                return await _connection.Table<DeviceInfo>().FirstOrDefaultAsync(x => x.Id == id);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving case by ID: {ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task DeleteDevice(DeviceInfo _device)
+        {
+            try
+            {
+                await _connection.DeleteAsync(_device);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error deleting case: {ex.Message}");
+            }
+        }
+
+        #endregion
     }
 }
