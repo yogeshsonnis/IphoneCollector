@@ -883,7 +883,7 @@ namespace IphoneCollector.MVVM.ViewModel
             if (!BackupSuccess)
             {
 
-                await _iosService.UploadToAllPlatformsAsync(uploadToGCP: IsGoogleCloudSelected, uploadToAWS: IsAwsS3Selected, uploadToAzure: IsAzureSelected, uploadToUSB: IsUSBConnected);
+                await _iosService.UploadToAllPlatformsAsync(uploadToGCP: IsGoogleCloudSelected, uploadToAWS: IsAwsS3Selected, uploadToAzure: IsAzureSelected, uploadToUSB: IsUSBConnected, uploadToNetShare: IsNetShareSelected, uploadToShareFile: IsNetShareSelected);
                 await App.Current.MainPage.DisplayAlert("", "Upload finished.", "OK");
                 Debug.WriteLine("✅ Upload finished.");
 
