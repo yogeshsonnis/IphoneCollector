@@ -255,12 +255,22 @@ namespace IphoneCollector.MVVM.ViewModel
         public ICommand SummaryNextBtnCommand { get; set; }
         public ICommand StorageOptionsNextCommand { get; }
         public ICommand SaveAddDeviceCommand { get; }
+
+        public ICommand StartUploadCommand { get; }
+        public ICommand StartUploadPrevCommand { get; }
+        public ICommand SelectFileCommand { get; }
+        public ICommand RescanDeviceCommand { get; }
+        public ICommand StartCollectionNextBtnCommand { get; }
+        public ICommand StartCollectionPrevBtnCommand { get; }
+        public ICommand BackupDataCommand { get; }
+        public ICommand StorageOptionsPrevCommand { get; }
+        public ICommand ShowPickerCommand { get; set; }
+        public ICommand SummaryPrevBtnCommand { get; set; }
         #endregion
 
         public MainViewModelVM(LocalDbService dbService)
         {
             _dbServices = dbService;
-            _ = GetCollectorWizardData();
             
             DetectAndLoadDevice();
 
@@ -306,6 +316,7 @@ namespace IphoneCollector.MVVM.ViewModel
             AzureBtnCommand = new RelayCommand(ExecuteAzureBtnCommand);
             FileShareBtnCommand = new RelayCommand(ExecuteFileShareBtnCommand);
             FTPBtnCommand = new RelayCommand(ExecuteFTPBtnCommand);
+            RescanDeviceCommand = new RelayCommand(ExecuteRescanDeviceCommand);
             // CurrentView = new CollectionWizardView();
             CollectionWizardCommand = new RelayCommand(ExecuteCollectionWizardCommand);
             CastPageCommand = new RelayCommand(ExecuteCastPageCommand);
@@ -397,6 +408,11 @@ namespace IphoneCollector.MVVM.ViewModel
         {
             DeviceFolders = new ObservableCollection<SelectedFolder>(
                 folders.Select(f => new SelectedFolder { Name = f, IsSelected = false }));
+        }
+
+        private void ExecuteRescanDeviceCommand()
+        {
+            DetectAndLoadDevice();
         }
 
         public async Task GetCollectorWizardData()

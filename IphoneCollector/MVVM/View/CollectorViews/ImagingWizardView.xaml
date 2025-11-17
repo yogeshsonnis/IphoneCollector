@@ -88,7 +88,7 @@
 
                             <HorizontalStackLayout Spacing="10" Grid.Row="1" Margin="10">
                             <ProgressBar  x:Name="ImagingProgressBar"  ProgressColor="#1e88e5"  BackgroundColor="#E0E0E0"  WidthRequest="734" MinimumHeightRequest="10"/>
-                            <Button HeightRequest="32" Clicked="OnStartImagingClicked" Text="Start Imaging" TextColor="White" FontSize="13"  WidthRequest="107" Background="#1e88e5"/>
+                            <Button HeightRequest="32" Clicked="OnStartImagingClicked" Text="Start Imaging" TextColor="White" FontSize="13"  WidthRequest="107" Command="{Binding RescanDeviceCommand}" Background="#1e88e5"/>
                             </HorizontalStackLayout>
 
                         </Grid>
